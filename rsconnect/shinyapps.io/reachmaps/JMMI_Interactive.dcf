@@ -1,0 +1,12 @@
+name: JMMI_Interactive
+title: JMMI_Interactive
+username:
+account: reachmaps
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 1465009
+bundleId: 2600991
+url: https://reachmaps.shinyapps.io/JMMI_Interactive/
+when: 1574182093.45181
+asMultiple: FALSE
+asStatic: FALSE
