@@ -400,8 +400,8 @@ server<-function(input, output,session) {
   output$hcontainer <- renderHighchart({
     event <- (input$map1_shape_click) #Critical Line!!!
     
-    validate(need(event$id != "",
-                  "Please click on a district to display its history."))
+    (validate(need(event$id != "",
+                  "Please click on a district to display its history.")))
 
     ChartDat<-chartData1() #define filtered table that is reactive element chartData1
     
@@ -415,7 +415,7 @@ server<-function(input, output,session) {
       #data for governorate
       hc_add_series(data=ChartDat, type = "line", hcaes(date2, governorate_val), color = "forestgreen", name=paste(chartNAME(),"-Governorate"))%>%
       #data for district
-      hc_add_series(data=ChartDat, type = "line", hcaes(date2, variableSEL), color="#4F4E51", name = chartNAME())%>%
+      hc_add_series(data=ChartDat, type = "line", hcaes(date2, variableSEL), color="#4F4E51", name=paste(chartNAME(),"-District"))%>%
       
       hc_yAxis(title=list(text=paste0(chartNAME()," in YER")), opposite = FALSE) %>%
       hc_title(text=chosenD)%>%
@@ -445,15 +445,14 @@ server<-function(input, output,session) {
                           ChartDat_Date_filter[11],
                           ChartDat_Date_filter[12]), 
     nrow=2, ncol=3, byrow = T,
-    dimnames=list(c("Price (YER)","Number of Observations"),c(paste0("District: \n",na.omit(unique(ChartDat_Date[,4]))),paste0("Governorate: \n",na.omit(unique(ChartDat_Date[,2]))),"Yemen")))
+    dimnames=list(c("Median Price (YER)","Number of Markets Assessed"),c(paste0("District: \n",na.omit(unique(ChartDat_Date[,4]))),paste0("Governorate: \n",na.omit(unique(ChartDat_Date[,2]))),"Yemen")))
   
   DT::datatable(mat_date_test,options = list(dom = 't'))
    })
   
   
   output$text1 <- renderUI({ #customised text elements
-    HTML(paste("Contact:  yemen@reach-initiative.org",
-               "Coordinate System:  WGS 1984",
+    HTML(paste("Coordinate System:  WGS 1984",
                "Administrative boundaries:  OCHA",
                "R Mapping Packages:  leaflet, shiny, highcharter",
                sep="<br/>"), '<style type="text/css"> .shiny-html-output { font-size: 11px; line-height: 12px;
@@ -469,17 +468,16 @@ server<-function(input, output,session) {
          font-family: Helvetica} </style>')
   })
   output$text3 <- renderText({ #LARGE TEXT ABOVE CHART
-    paste(chartNAME(), " ", "Over Time")
+    paste(chartNAME(), " ", "Medians Over Time")
   })
 
   output$text_DT<-renderText({
-    paste(chartNAME(), " monthly costs and number of observations")
+    paste(chartNAME(), " Median Monthly Costs and Number of Markets Assessed")
   })
   
   output$text4 <- renderUI({
-    HTML(paste("<i>SMEB Calculation Explaination and Methodology 
-                can be located on the information tab</i>",
-      sep="<br/>"), '<style type="text/css"> .shiny-html-output { font-size: 11px; line-height: 11px;
+    HTML(paste("<i>For more information, please contact For more information, please visit our",a("REACH Website", target="_blank", href="https://www.reach-initiative.org"), 
+    "or contact us directly at yemen@reach-initiative.org.</i>"), '<style type="text/css"> .shiny-html-output { font-size: 11px; line-height: 11px;
          font-family: Helvetica} </style>')
   })
   #
