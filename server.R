@@ -5,108 +5,103 @@ server<-function(input, output,session) {
   output$map1 <- renderLeaflet({  #initiate map
     leaflet(options = leafletOptions(minZoom = 4.5)) %>%
       addProviderTiles(providers$Esri.WorldGrayCanvas) %>% #base map, can be changed
-      setView(45.4064,15.0527, zoom = 8)
+      setView(50.911019,15.889618, zoom = 6.5)
     # setMaxBounds( lng1 = -66.9
     #               , lat1 = 37
     #               , lng2 = -66.1
     #               , lat2 = 37.8 )
   })
   
-  #"observe" inputs to define variables for map colors, titles, legends and subset district data
+ #"observe" inputs to define variables for map colors, titles, legends and subset district data
   observe({
     VARIA <- input$variable1
     #YlOrRd #YlGnBu #RdPu #OrRd #Greys #Greens #viridis #magma
     if (VARIA == "SMEB") {
       dataM<-Rshp[,c(1,5,7,8,10,29,28,30)] #subset exchange rate col
-      mypal<-colorNumeric( palette="magma", domain=dataM@data[,6], na.color = "#9C9D9F", reverse = T)
+      #mypal<-colorNumeric( palette="RdYlGn", domain=(dataM@data[,6]), na.color = "#9C9D9F", reverse = T)
+      mypal<-colorNumeric( palette=(colorRamp(c("#ADFFA5", "#A7383D", "#420A0D"), interpolate="linear")),domain=dataM@data[,6], na.color = "#9C9D9F", reverse = F)
       pLa<-"SMEB: "
       pLa2<-"SMEB"
       en<-" "
       unitA=" YER"
-      
     }
     if (VARIA == "exchange_rates") {
       dataM<-Rshp[,c(1,5,7,8,10,27,28,30)] #subset exchange rate col
-      mypal<-colorNumeric( palette="OrRd", domain=dataM@data[,6], na.color = "#9C9D9F")
+      mypal<-colorNumeric( palette="Greens", domain=dataM@data[,6], na.color = "#9C9D9F",reverse = F)
       pLa<-"Parallel Exchange Rate: "
       pLa2<-"Parrallel Exchange Rate"
       en<-" "
       unitA=" YER"
-      
     }
     if (VARIA == "petrol") {
       dataM<-Rshp[,c(1,5,7,8,10,19,28,30)] #subset exchange rate col
-      mypal<-colorNumeric( palette="YlOrRd", domain=dataM@data[,6], na.color = "#9C9D9F")
+      mypal<-colorNumeric( palette="YlOrBr", domain=dataM@data[,6], na.color = "#9C9D9F", reverse = F)
       pLa<-"Petrol Price: "
       pLa2<-"Petrol Price"
       en<-" "
       unitA=" YER"
-      
     }
     if (VARIA == "diesel") {
       dataM<-Rshp[,c(1,5,7,8,10,20,28,30)] #subset exchange rate col
-      mypal<-colorNumeric( palette="magma", domain=dataM@data[,6], na.color = "#9C9D9F")
+      #mypal<-colorNumeric( palette="Reds", domain=dataM@data[,6], na.color = "#9C9D9F", reverse = F)
+      mypal<-colorNumeric( palette=(colorRamp(c("#FFD7D9", "#FF535B", "#FB000D", "#830007", "#480004"), interpolate="spline")),domain=dataM@data[,6], na.color = "#9C9D9F", reverse = F)
       pLa<-"Diesel Price: "
       pLa2<-"Diesel Price"
       en<-" "
       unitA=" YER"
-      
     }
     if (VARIA == "bottled_water") {
       dataM<-Rshp[,c(1,5,7,8,10,21,28,30)] #subset exchange rate col
-      mypal<-colorNumeric( palette="Reds", domain=dataM@data[,6], na.color = "#9C9D9F")
+      #mypal<-colorNumeric( palette="PuBu", domain=dataM@data[,6], na.color = "#9C9D9F", reverse = F)
+      mypal<-colorNumeric( palette=(colorRamp(c("#C7C0FF", "#7A6AFF", "#1501B9", "#0A005D", "#050033"), interpolate="spline")),domain=dataM@data[,6], na.color = "#9C9D9F", reverse = F)
       pLa<-"Bottled Water Price: "
       pLa2<-"Bottled Water Price"
       en<-" "
       unitA=" YER"
-      
     }
     if (VARIA == "treated_water") {
       dataM<-Rshp[,c(1,5,7,8,10,22,28,30)] #subset exchange rate col
-      mypal<-colorNumeric( palette="YlGnBu", domain=dataM@data[,6], na.color = "#9C9D9F")
+      mypal<-colorNumeric( palette=(colorRamp(c("#C3FFFD", "#6EFBF6", "#009F99", "#00504D"), interpolate="linear")),domain=dataM@data[,6], na.color = "#9C9D9F", reverse = F)
+      #mypal<-colorNumeric( palette="PuBuGn", domain=dataM@data[,6], na.color = "#9C9D9F", reverse = F)
       pLa<-"Treated Water Price: "
       pLa2<-"Treated Water Price"
       en<-" "
       unitA=" YER"
-      
     }
     if (VARIA == "soap") {
       dataM<-Rshp[,c(1,5,7,8,10,23,28,30)] #subset exchange rate col
-      mypal<-colorNumeric( palette="viridis", domain=dataM@data[,6], na.color = "#9C9D9F")
+      mypal<-colorNumeric( palette="RdPu", domain=dataM@data[,6], na.color = "#9C9D9F", reverse = F)
       pLa<-"Soap Price: "
       pLa2<-"Soap Price"
       en<-" "
       unitA=" YER"
-      
     }
     if (VARIA == "laundry_powder") {
       dataM<-Rshp[,c(1,5,7,8,10,24,28,30)] #subset exchange rate col
-      mypal<-colorNumeric( palette="Greens", domain=dataM@data[,6], na.color = "#9C9D9F")
+      mypal<-colorNumeric( palette="Purples", domain=dataM@data[,6], na.color = "#9C9D9F",reverse = F)
       pLa<-"Laundry Powder Price: "
       pLa2<-"Laundry Powder Price"
       en<-" "
-      unitA=" YER" 
-      
+      unitA=" YER"
     }
     if (VARIA == "sanitary_napkins") {
       dataM<-Rshp[,c(1,5,7,8,10,25,28,30)] #subset exchange rate col
-      mypal<-colorNumeric( palette="BuPu", domain=dataM@data[,6], na.color = "#9C9D9F")
+      mypal<-colorNumeric( palette="BuPu", domain=dataM@data[,6], na.color = "#9C9D9F", reverse = F)
       pLa<-"Sanitary Napkin Price: "
       pLa2<-"Sanitary Napkin Price"
       en<-" "
       unitA=" YER"
-   
     }
     if (VARIA == "cost_cubic_meter") {
       dataM<-Rshp[,c(1,5,7,8,10,26,28,30)] #subset exchange rate col
-      mypal<-colorNumeric( palette="RdPu", domain=dataM@data[,6], na.color = "#9C9D9F")
+      #mypal<-colorNumeric( palette="Blues", domain=dataM@data[,6], na.color = "#9C9D9F", reverse = F)
+      mypal<-colorNumeric( palette=(colorRamp(c("#C9C3F8", "#5D52AD", "#FAD962", "#AA9239"), interpolate="linear")),domain=dataM@data[,6], na.color = "#9C9D9F", reverse = F)
       pLa<-"Water Trucking Cost per Cubic Meter: "
       pLa2<-"Water Trucking Cost per Cubic Meter"
       en<-" "
       unitA=" YER"
-      
     }
-    
+  
     #Have a vector of all of the districts that currently have data for the current month
     dataM_NAs<-dataM@data%>%
       filter(is.na(date2))%>%
@@ -186,7 +181,7 @@ server<-function(input, output,session) {
                   opacity = 1.0,
                   smoothFactor = 0.8,
                   fill = TRUE,
-                  fillColor =  (~mypal(dataM@data[,6])),#custom palette
+                  fillColor =  (~mypal((dataM@data[,6]))),#custom palette
                   fillOpacity = .8,
                   layerId = ~admin2pcod,
                   highlightOptions = highlightOptions(color = "black", weight = 2,
@@ -197,7 +192,7 @@ server<-function(input, output,session) {
       addPolygons(data= old_dist_alt_sp,    # this is you clipped data file of previous districts (make sure it is below your main district on or it will not be seen)
                   color = "red",
                   weight = 1.0,
-                  label = paste0(old_dist_alt_sp$admin2name,":previous ",pLa2," data pesent"), #added a different label that pops up
+                  label = paste0(old_dist_alt_sp$admin2name,":previous ",pLa2," data present"), #added a different label that pops up
                   opacity = 1.0,
                   smoothFactor = 0.5,
                   fill = TRUE,
@@ -217,17 +212,18 @@ server<-function(input, output,session) {
     
     map1 %>% clearControls()
     
-    map1 %>% addLegend("topleft", pal = mypal, values = dataM@data[,6], #update legend to reflect changes in selected district/variable shown
+    map1 %>% addLegend_decreasing("topleft", pal = mypal, values =  dataM@data[,6], #update legend to reflect changes in selected district/variable shown
                        labFormat=labelFormat(suffix=unitA),
                        title = "Price",
-                       opacity = 5)
-    
+                       opacity = 5,
+                       decreasing = T) 
+  
     #needed to make a custom label because i hate R shiny https://stackoverflow.com/questions/52812238/custom-legend-with-r-leaflet-circles-and-squares-in-same-plot-legends
-    colors<-c("white")
-    labels<-c("Districts with previous data")
-    sizes<-c("20")
-    shapes<-c("square")
-    borders<-c("red")
+    colors<-c("white", "#D3D3D3", "#D3D3D3")
+    labels<-c("Districts with previous data", "Governorate borders", "District borders")
+    sizes<-c("20", "20", "20")
+    shapes<-c("square", "line", "line")
+    borders<-c("red", "#2B2B2B" , "#646464")
     
     addLegendCustom <- function(map, colors, labels, sizes, shapes, borders, opacity = 0.5){
       
@@ -248,9 +244,13 @@ server<-function(input, output,session) {
     return(addLegend(map1,"topleft", colors = legend_colors, labels = legend_labels, opacity = 0.5))
   }
     
-    
+    #add new legend 
     map1 %>% addLegendCustom(colors, labels, sizes, shapes, borders)
+  
+    #add scale bar
+    map1 %>% addScaleBar("topleft", options = scaleBarOptions(maxWidth = 100, metric = T, imperial = T, updateWhenIdle = T))
     
+  
   })#end of MAP
   
   #_________________________create reactive objects for use in the chart___________________
@@ -343,6 +343,76 @@ server<-function(input, output,session) {
     r
   })
 
+  if(FALSE){
+  chartDatMIN<-reactive({  #subset JMMI data table based on variable of interest (soap, water etc)
+    if (input$variable1 == "SMEB"){
+      min<-min_max_out[2,10]
+    }
+    if (input$variable1 == "exchange_rates"){
+      min<-min_max_out[2,9]
+    }
+    if (input$variable1 == "petrol"){
+      min<-min_max_out[2,1]
+    }
+    if (input$variable1 == "diesel"){
+      min<-min_max_out[2,2]
+    }
+    if (input$variable1 == "bottled_water"){
+      min<-min_max_out[2,3]
+    }
+    if (input$variable1 == "treated_water"){
+      min<-min_max_out[2,4]
+    }
+    if (input$variable1 == "soap"){
+      min<-min_max_out[2,5]
+    }
+    if (input$variable1 == "laundry_powder"){
+      min<-min_max_out[2,6]
+    }
+    if (input$variable1 == "sanitary_napkins"){
+      min<-min_max_out[2,7]
+    }
+    if (input$variable1 == "cost_cubic_meter"){
+      min<-min_max_out[2,8]
+    }
+    min
+  })  
+  
+  chartDatMAX<-reactive({  #subset JMMI data table based on variable of interest (soap, water etc)
+    if (input$variable1 == "SMEB"){
+      max<-min_max_out[1,10]
+    }
+    if (input$variable1 == "exchange_rates"){
+      max<-min_max_out[1,9]
+    }
+    if (input$variable1 == "petrol"){
+      max<-min_max_out[1,1]
+    }
+    if (input$variable1 == "diesel"){
+      max<-min_max_out[1,2]
+    }
+    if (input$variable1 == "bottled_water"){
+      max<-min_max_out[1,3]
+    }
+    if (input$variable1 == "treated_water"){
+      max<-min_max_out[1,4]
+    } 
+    if (input$variable1 == "soap"){
+      max<-min_max_out[1,5]
+    }
+    if (input$variable1 == "laundry_powder"){
+      max<-min_max_out[1,6]
+    }
+    if (input$variable1 == "sanitary_napkins"){
+      max<-min_max_out[1,7]
+    }
+    if (input$variable1 == "cost_cubic_meter"){
+      max<-min_max_out[1,8]
+    }
+    max
+  })  
+  }
+  
   chartNAME<-reactive({ #define element to be used as title for selected variable
     if (input$variable1 == "SMEB"){
       y="SMEB"
@@ -391,11 +461,12 @@ server<-function(input, output,session) {
   
   #_________________________Create highcharter element which uses dataset filtered by user inputs___________________
   #NEW OUT PUT FOR DATA TO BE SUBBED LATER
+  #https://stackoverflow.com/questions/38113507/r-shiny-keep-retain-values-of-reactive-inputs-after-modifying-selection
+  #https://stackoverflow.com/questions/57468457/how-can-i-set-the-yaxis-limits-within-highchart-plot
   
   observe({
-    updateSelectInput(session = session, inputId = "varDateSelect", choices = chartData1()$date)
+    updateSelectInput(session = session, inputId = "varDateSelect", choices = chartData1()$date,selected=lapply(reactiveValuesToList(input), unclass)$varDateSelect)
   })
-  
   
   output$hcontainer <- renderHighchart({
     event <- (input$map1_shape_click) #Critical Line!!!
@@ -404,12 +475,14 @@ server<-function(input, output,session) {
                   "Please click on a district to display its history.")))
 
     ChartDat<-chartData1() #define filtered table that is reactive element chartData1
+    #y_min<- chartDatMIN()
+    #y_max<- chartDatMAX()
     
     chosenD<- paste0(na.omit(unique(ChartDat[,2])),", ",na.omit(unique(ChartDat[,4]))) #TITLE FOR CHART (governorate and district name)
-    
+  
     highchart()%>% #high chart
       hc_xAxis(type = "datetime", dateTimeLabelFormats = list(day = '%b %Y')) %>%
-      
+        
       #data for national
       hc_add_series(data=ChartDat, type = "line", hcaes(date2, nat_val), color = "dodgerblue", name=paste(chartNAME(),"-National"))%>%
       #data for governorate
@@ -417,7 +490,9 @@ server<-function(input, output,session) {
       #data for district
       hc_add_series(data=ChartDat, type = "line", hcaes(date2, variableSEL), color="#4F4E51", name=paste(chartNAME(),"-District"))%>%
       
-      hc_yAxis(title=list(text=paste0(chartNAME()," in YER")), opposite = FALSE) %>%
+      hc_yAxis(title=list(text=paste0(chartNAME()," in YER")), opposite = FALSE
+               #,min= as.numeric(y_min), max= as.numeric(y_max)
+    )%>%
       hc_title(text=chosenD)%>%
       hc_add_theme(hc_theme_gridlight())%>%
       hc_plotOptions(line = list(
@@ -487,3 +562,4 @@ server<-function(input, output,session) {
 
 
 #FRoM ONLINE https://github.com/ua-snap/shiny-apps/blob/master/cc4liteFinal/server.R
+

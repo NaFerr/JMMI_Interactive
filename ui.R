@@ -18,10 +18,9 @@ vars1 <- c(
 varsDate<- c("Months to Select" = "varDateSelect")
 
 #USER INTERFACE COMPONENTS 
-navbarPage(theme= shinytheme("journal"),
+navbarPage(theme= shinytheme("journal"), 
            title=strong(HTML("<span style='font-size:30px'>YEMEN: Joint Market Monitoring Initiative</span>")), # id="nav", #MAIN TITLE
            windowTitle = "REACH: Yemen Joint Market Monitoring Initiative (JMMI)", #Title for browser tab window
-           
            
            ###..................................M A P. . P A G E ..........................................
            tabPanel(strong("JMMI"), #TAB LABEL
@@ -50,12 +49,10 @@ navbarPage(theme= shinytheme("journal"),
                                       width = 500, height = "auto", 
                                       
                                       hr(),
-                                      h4("The Yemen Joint Market Monitoring Initiative (JMMI) was launched by REACH in 
-                                      collaboration with the Water, Sanitation, and Hygiene (WASH) Cluster and the Cash 
-                                      and Market Working Group (CMWG) to support humanitarian actors with the harmonization 
-                                      of price monitoring among all cash actors in Yemen. 
-                                      The JMMI provides an indicative estimation of the prices of WASH and fuel items across districts in Yemen. Data was collected through interviews with vendors,
-                                      selected by partner organizations from markets of various sizes in both urban and rural areas."),
+                                      h4("The Yemen Joint Market Monitoring Initiative (JMMI) is a harmonized price monitoriong initiative that focuses on informing
+                                      the Water, Sanitation, and Hygiene (WASH) Cluster and the Cash 
+                                      and Market Working Group (CMWG) to support humanitarian activies throughout Yemen.  
+                                      The JMMI provides an indicative estimation of the prices of WASH and fuel items across districts in Yemen."),
                                       
                                       h4(p("The districts shaded in color on this map represent the most recent data collected from (number) districts in (month/year).
                                         The districts outlined in red indicate that data for the selected item was collected in that district in previous months.")),
@@ -74,12 +71,11 @@ navbarPage(theme= shinytheme("journal"),
                                       h4(textOutput("text3")), #extra small text which had to be customized as an html output in server.r (same with text1 and text 2)
                                       
                                       #HIGH CHART
-                                      highchartOutput("hcontainer", height= 200, width = 450),
+                                      highchartOutput("hcontainer", height= 300, width = 450),
                                       
                                       #new data table 
                                       hr(),
-                                      selectInput(inputId= "varDateSelect", label = h4("Select Month of Data Collection"), choices=NULL, selected = min("varsDateSelect")),#linked date stuff
-                                      
+                                      selectInput(inputId= "varDateSelect", label = h4("Select Month of Data Collection"), choices=NULL, selected = (("varsDateSelect"))),#linked date stuff
                                       h5(textOutput("text_DT")),
                                       DT::dataTableOutput("out_table_obs",height = "auto", width = "100%"),
                                       
