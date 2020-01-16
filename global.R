@@ -4,8 +4,9 @@
 library(devtools)
 library(shiny)
 library(rgdal)
-library("googlesheets")
+library(googlesheets)
 library(googlesheets4)
+library(googledrive)
 library(dplyr)
 library(leaflet)
 library(highcharter)
@@ -128,6 +129,49 @@ addLegend_decreasing <- function (map, position = c("topright", "bottomright", "
 #Read in GoogleSheets
 #googlesheets4::sheets_deauth()
 #googlesheets4::sheets_auth_configure(.http-oauth)
+
+#gargle::token_fetch()
+#options(gargle_oauth_cache = T)
+#sheets_token("https://accounts.google.com/o/oauth2/auth?client_id=603366585132-0l3n5tr582q443rnomebdeeo0156b2bc.apps.googleusercontent.com&scope=https%3A%2F%2Faccounts.google.com%2Fo%2Foauth2%2Fauth%3Fclient_id%3D603366585132-0l3n5tr582q443rnomebdeeo0156b2bc.apps.googleusercontent.com%26scope%3Dhttps%253A%252F%252Fwww.googleapis.com%252Fauth%252Fspreadsheets%2520https%253A%252F%252Fwww.googleapis.com%252Fauth%252Fuserinfo.email%26redirect_uri%3Dhttp%253A%252F%252Flocalhost%253A1410%252F%26response_type%3Dcode%26state%3Dx6Xxf9mH0V%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email&redirect_uri=http%3A%2F%2Flocalhost%3A1410%2F&response_type=code&state=x6Xxf9mH0V")
+#options(gargle_quiet = FALSE)
+#drive_auth(cache = ".secrets", 
+#           email = TRUE) 
+#sheets_auth(token = drive_token(),
+#            scopes="https://www.googleapis.com/auth/spreadsheets.readonly")
+
+#options(gargle_oauth_email = TRUE)
+#options(sheets_user(TRUE))
+
+#options(gargle_oauth_email = T)
+#drive_auth(email = T)
+#sheets_auth(email = gargle_oauth_email())
+#token<-list.files(".secrets/")
+ 
+#get the authorizations from the google sheets
+#https://gargle.r-lib.org/articles/non-interactive-auth.html
+
+library(googledrive)
+
+# designate project-specific cache
+options(gargle_oauth_cache = ".secrets")
+
+# check the value of the option, if you like
+gargle::gargle_oauth_cache()
+
+# trigger auth on purpose --> store a token in the specified cache
+drive_auth()
+
+# see your token file in the cache, if you like
+list.files(".secrets/")
+
+
+drive_auth(cache=".secrets")
+
+options(
+  gargle_oauth_cache = ".secrets",
+  gargle_oauth_email = T,
+  gargle_quiet = F
+)
 
 GSh<- read_sheet('https://docs.google.com/spreadsheets/d/1F7HEGZEe5_6sk_xrFrwg8k9VVWkpprXSC7O3SosWbjc', sheet = 1)%>%
 #GSh<-read_excel("data/updated_interactive.xlsx",sheet = 2)%>%
