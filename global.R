@@ -19,6 +19,7 @@ library(shinythemes)
 library(ggplot2)
 library(sp)
 library(purrr)
+library(shinydashboard)
 
 addLegend_decreasing <- function (map, position = c("topright", "bottomright", "bottomleft", 
                                                     "topleft"), pal, values, na.label = "NA", bins = 7, colors, 

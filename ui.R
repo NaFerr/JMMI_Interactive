@@ -19,7 +19,7 @@ varsDate<- c("Months to Select" = "varDateSelect")
 
 #USER INTERFACE COMPONENTS 
 navbarPage(theme= shinytheme("journal"), 
-           title=strong(HTML("<span style='font-size:30px'>YEMEN: Joint Market Monitoring Initiative</span>")), # id="nav", #MAIN TITLE
+           title=strong(HTML("<span style='font-size:30px'>YEMEN: JOINT MARKET MONITORING INITIATIVE</span>")), # id="nav", #MAIN TITLE
            windowTitle = "REACH: Yemen Joint Market Monitoring Initiative (JMMI)", #Title for browser tab window
            
            ###..................................M A P. . P A G E ..........................................
@@ -29,7 +29,11 @@ navbarPage(theme= shinytheme("journal"),
                         
                         tags$head(
                           # Include our custom CSS
-                          includeCSS("styles.css") #ENSURE CSS file IS USED 
+                          shiny::includeCSS("styles.css"), #ENSURE CSS file IS USED 
+                          includeCSS("AdminLTE.css"),
+                          shiny::includeCSS( "bootstrap.css"), #added 
+                          includeCSS(path = "shinydashboard.css"),
+                          br()#added
                         ),
                         
                         #LEAFLET MAP
@@ -40,9 +44,16 @@ navbarPage(theme= shinytheme("journal"),
                                             #controls {height:90vh; overflow-y: auto; }
                                               ")), #remove map zoom controls
                       
-                      
+                        tags$head(tags$style(
+                          type = "text/css",
+                          "#controlPanel {background-color: rgba(255,255,255,0.8);}",
+                          ".leaflet-top.leaflet-left .leaflet-control {
+                           margin-top: 25px;
+                         }"
+                        )),
+                        #https://stackoverflow.com/questions/37861234/adjust-the-height-of-infobox-in-shiny-dashboard
                         
-                      
+                       
                         #SIDE PANEL
                         absolutePanel(id = "controls", class = "panel panel-default", fixed = TRUE,
                                       draggable = TRUE, top = 60, left = "auto", right = 20, bottom = 1,
@@ -58,7 +69,7 @@ navbarPage(theme= shinytheme("journal"),
                                         The districts outlined in red indicate that data for the selected item was collected in that district in previous months.")),
                                       
                                       h4("Further details regarding the JMMI methodology and the Survival Minimum Expenditure Basket (SMEB) calculation can be found on the information tab. 
-                                         For static monthly reports please visit: ",a("REACH Resource Center", target="_blank",    href="https://www.reachresourcecentre.info/country/yemen/cycle/754/#cycle-754")),
+                                         For additional information on supply chains and market-related concerns, please visit the  ",a("REACH Resource Center", target="_blank",    href="https://www.reachresourcecentre.info/country/yemen/cycle/754/#cycle-754"), " to access the monthly situation overviews."),
                                       
                                       hr(),
                                       
@@ -76,8 +87,16 @@ navbarPage(theme= shinytheme("journal"),
                                       #new data table 
                                       hr(),
                                       selectInput(inputId= "varDateSelect", label = h4("Select Month of Data Collection"), choices=NULL, selected = (("varsDateSelect"))),#linked date stuff
-                                      h5(textOutput("text_DT")),
+                                      h4(textOutput("text_DT")),
                                       DT::dataTableOutput("out_table_obs",height = "auto", width = "100%"),
+                                      
+                                      #####Attempt to add an info box
+                                      hr(),
+                                      h4("Exchange Rate for selected month in table"),
+                                      h5("(please select month to populate information box)"),
+                                      fluidRow(valueBoxOutput("info_exchange", width = 12)),
+                                      #hr(),
+                                      #hr(),
                                       
                                       h6(htmlOutput("text1")),
                                       h6(htmlOutput("text2")),
@@ -91,8 +110,8 @@ navbarPage(theme= shinytheme("journal"),
                         
                         tags$div(id="cite",
                                  a(img(src='reach_logoInforming.jpg', height= "40px"), target="_blank", href="http://www.reach-initiative.org"),
-                                 img(src='CMWG Logo.jpg', height= "34px"),
-                                 img(src='washlogo_grey-300DPI.png', height= "35px"))
+                                 img(src='CMWG Logo.jpg', height= "40px", style='padding:1px;border:thin solid black;'),
+                                 img(src='washlogo_grey-300DPI.png', height= "40px"))
 
                         # tags$div(id="cite",
                         #          a(img(src='reach_logoInforming.jpg', width= "200px"), target="_blank", href="http://www.reach-initiative.org"))
@@ -100,14 +119,16 @@ navbarPage(theme= shinytheme("journal"),
            ),
            ###..................................I N F O. . P A G E ..........................................
            tabPanel(strong("Information"),
+                    tags$head(tags$style("{ height:90vh; overflow-y: scroll; }")),
 
                     icon= icon("info"), #info-circle
-                    div(class="outer",
+                    div(#class="outer",
 
                         tags$head(
                           # Include our custom CSS
-                          includeCSS("styles.css")
-                        ),
+                          includeCSS("styles.css"),
+                        style=" { height:90vh; overflow-y: scroll; }
+                                              "), 
                         
                         column(width=8,h3("Overview")), #h1- h5 change the header level of the text
                         
@@ -132,14 +153,14 @@ navbarPage(theme= shinytheme("journal"),
                                           location, where there is at least one wholesaler operating in the 
                                           market, or multiple areas of commerce within the same geographical 
                                           location when it is too small, to provide a minimum of three price 
-                                          quotations per assessed item.", tags$strong(tags$u("Findings are indicative for the assessed 
+                                          quotations per assessed item.", tags$i(tags$strong("Findings are indicative for the assessed 
                                           locations and timeframe in which the data was collected.")))),
                                
                         column(width=8,h3("SMEB Calculation")), #h1- h5 change the header level of the text
                                
                         column(width=7,h5("Each month, enumerators conduct KI interviews with market vendors to collect three price quotations for each item from the same market in each district. 
-                                          REACH calculates the WASH SMEB (Survival Minimum Expenditure Basket),
-                                          which is composed of four median item prices: Soap (1.05 kg), Laundry Powder (2 kg), Sanitary Napkins (20 units),and Water Trucking (3.15 m3).",
+                                          REACH calculates the WASH SMEB,
+                                          which is composed of four median item prices: Soap (1.05 kg), Laundry Powder (2 kg), Sanitary Napkins (20 units) ,and Water Trucking (3.15 m3).",
                                           p(),
                                           p("The calculation of the aggregated median price for districts and governorates is done following a stepped approach. 
                                           Firstly, the median of all the price quotations related to the same market is taken. Secondly, the median quotation from each market is aggregated to calculate the district median. 
@@ -165,6 +186,49 @@ navbarPage(theme= shinytheme("journal"),
                     ),
            
            
-           conditionalPanel("false", icon("crosshairs"))
-)
+           #conditionalPanel("false", icon("crosshairs")),
+#)
 
+tabPanel(strong("Partners"),
+         
+         #style=("{overflow-y:auto; }"), 
+         icon= icon("handshake"), #info-circle
+         div(tags$head(
+               # Include our custom CSS
+               tags$style(".fa-check {color:#008000}"),
+               tags$style(HTML(".sidebar {height:50vh; overflow-y:auto; }"))
+             ),
+             
+             column(width=8,h3("Partners Past and Present")), #h1- h5 change the header level of the text
+             column(width=7, h6(tags$i("Check marks indicate current participating partner in indicated month"))),
+             
+             #list of partners orgs
+             column(width=12, h5("Agency for Technical Cooperation and Development (ACTED)"),img(src='0_acted.png', height= "50px", style='padding:1px;border:thin solid black;')),
+             column(width=12, h5("Adventist Development and Relief Agency (ADRA)"), img(src='0_adra.jpg', height= "50px", style='padding:1px;border:thin solid black;')),
+             column(width=12, h5("Al Thadamon Association"), img(src='0_thadamon.jpg', height= "50px", style='padding:1px;border:thin solid black;')),
+             column(width=12, h5("Brains for Development (B4D)"),img(src='0_b4d.jpg', height= "50px", style='padding:1px;border:thin solid black;')),
+             column(width=12, h5("Creative Youth Foundation (CYF)"), img(src='0_cyf.png', height= "50px", style='padding:1px;border:thin solid black;')),
+             column(width=12, h5("Danish Refugee Council (DRC)",icon("check", "fa-2x")), img(src='0_drc.png', height= "50px", style='padding:1px;border:thin solid black;')),
+             #column(width=12, h5("Generations without Qat (GWQ)"), img(src='0_gwq.png', height= "50px", style='padding:1px;border:thin solid black;')),
+             #column(width=12, h5("LLMPO"), img(src='0_cyf.png', height= "50px", style='padding:1px;border:thin solid black;')),
+             column(width=12, h5("International Organization for Migration (IOM)", icon("check", "fa-2x")), img(src='0_iom.png', height= "50px", style='padding:1px;border:thin solid black;')),
+             column(width=12, h5("Mercy Corps (MC)"), img(src='0_mercy.jfif', height= "50px", style='padding:1px;border:thin solid black;')),
+             column(width=12, h5("National Foundation for Development and Humanitarian Response (NFDHR)",icon("check", "fa-2x")), img(src='0_nfdhr.png', height= "50px", style='padding:1px;border:thin solid black;')),
+             column(width=12, h5("National Forum Human Development (NFHD)", icon("check", "fa-2x")), img(src='0_nfhd.png', height= "50px", style='padding:1px;border:thin solid black;')),
+             column(width=12, h5("Norweigan Refugee Council (NRC)"), img(src='0_nrc.png', height= "50px", style='padding:1px;border:thin solid black;')),
+             column(width=12, h5("Old City Foundation for Development (OCFD)",icon("check", "fa-2x")), img(src='0_ocfd.jpg', height= "50px", style='padding:1px;border:thin solid black;')),
+             column(width=12, h5("OXFAM",icon("check", "fa-2x")), img(src='0_oxfam.png', height= "50px", style='padding:1px;border:thin solid black;')),
+             column(width=12, h5("Rising Org. for Children Rights Development (ROC)",icon("check", "fa-2x")), img(src='0_roc.jpg', height= "50px", style='padding:1px;border:thin solid black;')),
+             #column(width=12, h5("SAMA"), img(src='0_cyf.png', height= "50px", style='padding:1px;border:thin solid black;')),
+             column(width=12, h5("Save the Children (SCI)",icon("check", "fa-2x")), img(src='0_sci.png', height= "50px", style='padding:1px;border:thin solid black;')),
+             column(width=12, h5("Sustainable Development Foundation (SDF)"), img(src='0_sdf.jpg', height= "50px", style='padding:1px;border:thin solid black;')),
+             column(width=12, h5("Solidarites International (SI)",icon("check", "fa-2x")), img(src='0_si.jpeg', height= "50px", style='padding:1px;border:thin solid black;')),
+             column(width=12, h5("Soul Yemen"), img(src='0_soul.png', height= "50px", style='padding:1px;border:thin solid black;')),
+             column(width=12, h5("Tamdeen Youth Foundation (TYF)",icon("check", "fa-2x")), img(src='0_tyf.png', height= "50px", style='padding:1px;border:thin solid black;')),
+             column(width=12, h5("Vision Hope"), img(src='0_vision.png', height= "50px", style='padding:1px;border:thin solid black;')),
+             column(width=12, h5("Yemen Family Care Association (YFCA)"), img(src='0_yfca.bmp', height= "50px", style='padding:1px;border:thin solid black;')),
+             column(width=12, h5("Yemen Shoreline Development (YSD)"), img(src='0_ysd.jpg', height= "50px", style='padding:1px;border:thin solid black;'))
+             
+             
+))
+)

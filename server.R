@@ -19,87 +19,98 @@ server<-function(input, output,session) {
     if (VARIA == "SMEB") {
       dataM<-Rshp[,c(1,5,7,8,10,29,28,30)] #subset exchange rate col
       #mypal<-colorNumeric( palette="RdYlGn", domain=(dataM@data[,6]), na.color = "#9C9D9F", reverse = T)
-      mypal<-colorNumeric( palette=(colorRamp(c("#ADFFA5", "#A7383D", "#420A0D"), interpolate="linear")),domain=dataM@data[,6], na.color = "#9C9D9F", reverse = F)
+      mypal<-colorNumeric( palette=(colorRamp(c("#ADFFA5", "#A7383D", "#420A0D"), interpolate="linear")),domain=dataM@data[,6], na.color = "#D0CFCF", reverse = F)
       pLa<-"SMEB: "
       pLa2<-"SMEB"
       en<-" "
       unitA=" YER"
+      title_legend<-"Price"
     }
     if (VARIA == "exchange_rates") {
       dataM<-Rshp[,c(1,5,7,8,10,27,28,30)] #subset exchange rate col
-      mypal<-colorNumeric( palette="Greens", domain=dataM@data[,6], na.color = "#9C9D9F",reverse = F)
+      mypal<-colorNumeric( palette="Greens", domain=dataM@data[,6], na.color = "#D0CFCF",reverse = F)
       pLa<-"Parallel Exchange Rate: "
       pLa2<-"Parrallel Exchange Rate"
       en<-" "
       unitA=" YER"
+      title_legend<-"YER to 1 USD"
     }
     if (VARIA == "petrol") {
       dataM<-Rshp[,c(1,5,7,8,10,19,28,30)] #subset exchange rate col
-      mypal<-colorNumeric( palette="YlOrBr", domain=dataM@data[,6], na.color = "#9C9D9F", reverse = F)
+      mypal<-colorNumeric( palette="YlOrBr", domain=dataM@data[,6], na.color = "#D0CFCF", reverse = F)
       pLa<-"Petrol Price: "
       pLa2<-"Petrol Price"
       en<-" "
       unitA=" YER"
+      title_legend<-"Price (1 L)"
     }
     if (VARIA == "diesel") {
       dataM<-Rshp[,c(1,5,7,8,10,20,28,30)] #subset exchange rate col
       #mypal<-colorNumeric( palette="Reds", domain=dataM@data[,6], na.color = "#9C9D9F", reverse = F)
-      mypal<-colorNumeric( palette=(colorRamp(c("#FFD7D9", "#FF535B", "#FB000D", "#830007", "#480004"), interpolate="spline")),domain=dataM@data[,6], na.color = "#9C9D9F", reverse = F)
+      mypal<-colorNumeric( palette=(colorRamp(c("#FFD7D9", "#FF535B", "#FB000D", "#830007", "#480004"), interpolate="spline")),domain=dataM@data[,6], na.color = "#D0CFCF", reverse = F)
       pLa<-"Diesel Price: "
       pLa2<-"Diesel Price"
       en<-" "
       unitA=" YER"
+      title_legend<-"Price (1 L)"
     }
     if (VARIA == "bottled_water") {
       dataM<-Rshp[,c(1,5,7,8,10,21,28,30)] #subset exchange rate col
       #mypal<-colorNumeric( palette="PuBu", domain=dataM@data[,6], na.color = "#9C9D9F", reverse = F)
-      mypal<-colorNumeric( palette=(colorRamp(c("#C7C0FF", "#7A6AFF", "#1501B9", "#0A005D", "#050033"), interpolate="spline")),domain=dataM@data[,6], na.color = "#9C9D9F", reverse = F)
+      mypal<-colorNumeric( palette=(colorRamp(c("#C7C0FF", "#7A6AFF", "#1501B9", "#0A005D", "#050033"), interpolate="spline")),domain=dataM@data[,6], na.color = "#D0CFCF", reverse = F)
       pLa<-"Bottled Water Price: "
       pLa2<-"Bottled Water Price"
       en<-" "
       unitA=" YER"
+      title_legend<-"Price (0.75 L)"
     }
     if (VARIA == "treated_water") {
       dataM<-Rshp[,c(1,5,7,8,10,22,28,30)] #subset exchange rate col
-      mypal<-colorNumeric( palette=(colorRamp(c("#C3FFFD", "#6EFBF6", "#009F99", "#00504D"), interpolate="linear")),domain=dataM@data[,6], na.color = "#9C9D9F", reverse = F)
+      mypal<-colorNumeric( palette=(colorRamp(c("#C3FFFD", "#6EFBF6", "#009F99", "#00504D"), interpolate="linear")),domain=dataM@data[,6], na.color = "#D0CFCF", reverse = F)
       #mypal<-colorNumeric( palette="PuBuGn", domain=dataM@data[,6], na.color = "#9C9D9F", reverse = F)
       pLa<-"Treated Water Price: "
       pLa2<-"Treated Water Price"
       en<-" "
       unitA=" YER"
+      title_legend<-"Price (10 L)"
     }
     if (VARIA == "soap") {
       dataM<-Rshp[,c(1,5,7,8,10,23,28,30)] #subset exchange rate col
-      mypal<-colorNumeric( palette="RdPu", domain=dataM@data[,6], na.color = "#9C9D9F", reverse = F)
+      mypal<-colorNumeric( palette="RdPu", domain=dataM@data[,6], na.color = "#D0CFCF", reverse = F)
       pLa<-"Soap Price: "
       pLa2<-"Soap Price"
       en<-" "
       unitA=" YER"
+      title_legend<-"Price (100 g)"
     }
     if (VARIA == "laundry_powder") {
       dataM<-Rshp[,c(1,5,7,8,10,24,28,30)] #subset exchange rate col
-      mypal<-colorNumeric( palette="Purples", domain=dataM@data[,6], na.color = "#9C9D9F",reverse = F)
+      mypal<-colorNumeric( palette="Purples", domain=dataM@data[,6], na.color = "#D0CFCF",reverse = F)
       pLa<-"Laundry Powder Price: "
       pLa2<-"Laundry Powder Price"
       en<-" "
       unitA=" YER"
+      title_legend<-"Price (100 g)"
     }
     if (VARIA == "sanitary_napkins") {
       dataM<-Rshp[,c(1,5,7,8,10,25,28,30)] #subset exchange rate col
-      mypal<-colorNumeric( palette="BuPu", domain=dataM@data[,6], na.color = "#9C9D9F", reverse = F)
+      mypal<-colorNumeric( palette="BuPu", domain=dataM@data[,6], na.color = "#D0CFCF", reverse = F)
       pLa<-"Sanitary Napkin Price: "
       pLa2<-"Sanitary Napkin Price"
       en<-" "
       unitA=" YER"
+      title_legend<-"Price (10 Pack)"
     }
     if (VARIA == "cost_cubic_meter") {
       dataM<-Rshp[,c(1,5,7,8,10,26,28,30)] #subset exchange rate col
       #mypal<-colorNumeric( palette="Blues", domain=dataM@data[,6], na.color = "#9C9D9F", reverse = F)
-      mypal<-colorNumeric( palette=(colorRamp(c("#C9C3F8", "#5D52AD", "#FAD962", "#AA9239"), interpolate="linear")),domain=dataM@data[,6], na.color = "#9C9D9F", reverse = F)
+      mypal<-colorNumeric( palette=(colorRamp(c("#C9C3F8", "#5D52AD", "#FAD962", "#AA9239"), interpolate="linear")),domain=dataM@data[,6], na.color = "#D0CFCF", reverse = T)
       pLa<-"Water Trucking Cost per Cubic Meter: "
       pLa2<-"Water Trucking Cost per Cubic Meter"
       en<-" "
       unitA=" YER"
+      title<-"Price (Cubic m)"
+      title_legend<-title
     }
   
     #Have a vector of all of the districts that currently have data for the current month
@@ -131,7 +142,7 @@ server<-function(input, output,session) {
     #convert back to a spatial datalist https://gis.stackexchange.com/questions/239118/r-convert-sf-object-back-to-spatialpolygonsdataframe
     old_dist_alt_sp<-sf::as_Spatial(old_dist_alt)
     #create a new color pallete for the new over lay
-    pal_alt<-colorBin( palette="white", domain=old_dist_alt_sp@data[,5])
+    pal_alt<-colorBin( palette="#E5E5E5", domain=old_dist_alt_sp@data[,5])
     
     #leaflet map proxy updates created map to reflect obeserved changes
     map1<-leafletProxy("map1") %>%
@@ -191,9 +202,9 @@ server<-function(input, output,session) {
       ) %>%
       addPolygons(data= old_dist_alt_sp,    # this is you clipped data file of previous districts (make sure it is below your main district on or it will not be seen)
                   color = "red",
-                  weight = 1.0,
+                  weight = 1.5,
                   label = paste0(old_dist_alt_sp$admin2name,":previous ",pLa2," data present"), #added a different label that pops up
-                  opacity = 1.0,
+                  opacity = .40,
                   smoothFactor = 0.5,
                   fill = TRUE,
                   fillColor = ~pal_alt(old_dist_alt_sp@data[,5]), #custom palette as stated before
@@ -203,7 +214,7 @@ server<-function(input, output,session) {
                     bringToFront = FALSE, sendToBack = FALSE),
       )%>%
       addPolylines(data = Admin1, #add governorate lines for reference
-                   weight= 2.5,
+                   weight= 3.25,
                    stroke = T,
                    color = "black",
                    fill=FALSE,
@@ -212,11 +223,12 @@ server<-function(input, output,session) {
     
     map1 %>% clearControls()
     
-    map1 %>% addLegend_decreasing("topleft", pal = mypal, values =  dataM@data[,6], #update legend to reflect changes in selected district/variable shown
-                       labFormat=labelFormat(suffix=unitA),
-                       title = "Price",
-                       opacity = 5,
-                       decreasing = T) 
+   map1 %>% 
+     addLegend_decreasing("topleft", pal = mypal, values =  dataM@data[,6], #update legend to reflect changes in selected district/variable shown
+                     labFormat=labelFormat(suffix=unitA),
+                     title = title_legend,
+                     opacity = 5,
+                     decreasing = T) 
   
     #needed to make a custom label because i hate R shiny https://stackoverflow.com/questions/52812238/custom-legend-with-r-leaflet-circles-and-squares-in-same-plot-legends
     colors<-c("white", "#D3D3D3", "#D3D3D3")
@@ -490,7 +502,7 @@ server<-function(input, output,session) {
       #data for district
       hc_add_series(data=ChartDat, type = "line", hcaes(date2, variableSEL), color="#4F4E51", name=paste(chartNAME(),"-District"))%>%
       
-      hc_yAxis(title=list(text=paste0(chartNAME()," in YER")), opposite = FALSE
+      hc_yAxis(tithcle=list(text=paste0(chartNAME()," in YER")), opposite = FALSE
                #,min= as.numeric(y_min), max= as.numeric(y_max)
     )%>%
       hc_title(text=chosenD)%>%
@@ -525,11 +537,31 @@ server<-function(input, output,session) {
   DT::datatable(mat_date_test,options = list(dom = 't'))
    })
   
+ 
+  #output infobox for the info exchange rate
+  output$info_exchange<-renderValueBox({
+    exchange_data<-AdminNatTable
+    exchange_data$date<-as.yearmon(exchange_data$date)
+    exchange_date<-exchange_data%>%
+      filter(date == input$varDateSelect)
+    exchange_rate<-exchange_date[1,10]
+    
+    valueBox(
+            #title = "Exchange Rate for selected month in table (please select month to populate information box)",
+            #title="test",
+            value = exchange_rate,
+            subtitle="YER to 1 USD", 
+            icon = icon("dollar"),
+            #fill=T, 
+            color = "green")
+   
+  })
   
   output$text1 <- renderUI({ #customised text elements
     HTML(paste("Coordinate System:  WGS 1984",
                "Administrative boundaries:  OCHA",
                "R Mapping Packages:  leaflet, shiny, highcharter",
+               "Please do NOT use Microsoft Edge for best user interaction",
                sep="<br/>"), '<style type="text/css"> .shiny-html-output { font-size: 11px; line-height: 12px;
          font-family: Helvetica} </style>')
   })

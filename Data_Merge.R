@@ -45,7 +45,7 @@ November_2019<-read_excel("21.REACH_YEM_Dataset_Joint Market Monitoring Initiati
 list_df = setNames(lapply(ls(), function(x) get(x)), ls())
 list_df_names <- names(list_df)
 
-col_name_initial<-c(colnames(April_2018%>% dplyr::select(starts_with('calc_price_'),contains("cost_cubic_metere"), contains("exchange_rate_result"),starts_with("governorate_"),starts_with("district_"),-contains('market'))))
+col_name_initial<-c("fuel_gov_origin","wash_gov_origin",colnames(April_2018%>% dplyr::select(starts_with('calc_price_'),contains("cost_cubic_metere"), contains("exchange_rate_result"),starts_with("governorate_"),starts_with("district_"),-contains('market'))))
 data_all_JMMI<-as_tibble(data.frame(test="TEST"))
 
 data_all_JMMI[,col_name_initial] <- NA
@@ -72,7 +72,7 @@ col_pull<-function(df, list_of_df){
   
   df1<-df%>%
     as_tibble()%>%
-    dplyr::select(starts_with('calc_price_'),contains("cost_cubic_meter"), contains("exchange_rate_result"),starts_with("governorate_"),starts_with("district_"))%>%
+    dplyr::select(starts_with('calc_price_'),contains("cost_cubic_meter"), contains("exchange_rate_result"),starts_with("governorate_"),starts_with("district_"),starts_with("fuel_gov_origin"),starts_with("wash_gov_origin"))%>%
     #rename(replace=c(colnames(df)=( gsub("_normalized", "_normalised", colnames(df) ) )  ))%>%
     mutate(as_tibble(),jmmi = name)%>%
     map_if(is.factor,as.character)%>%
@@ -123,7 +123,13 @@ source("./other scripts/add_pcodes.R")
 #debug(add.pcodes)
 data_all_JMMI<-add.pcodes(data_all_JMMI)
 
+#change Pcodes for origin governorates
+source("./other scripts/gov_code_switch.R")
+data_all_JMMI$fuel_gov_origin<-gov_code_switch(data_all_JMMI$fuel_gov_origin)
+data_all_JMMI$wash_gov_origin<-gov_code_switch(data_all_JMMI$wash_gov_origin)
 
+#pull in the full modes script
+source("./other scripts/full_modes.R")
 
 ################then begin the ananlysis of the files######################
 
@@ -154,7 +160,18 @@ for(i in seq_along(date_list)){
     district_obs<-df1%>%
       dplyr::select("district_id","jmmi","jmmi_date")%>%
       dplyr::count(district_id, jmmi)
+  
+    ####  
+    district_wash<-df1%>%
+      dplyr::select("district_id","jmmi","jmmi_date","wash_gov_origin")
+    
+      test<-dplyr::summarise(dplyr::group_by(district_wash,district_id), dist_wash_mode = full_modes(wash_gov_origin))%>%as.data.frame()
       
+      merge(district_wash, setNames(aggregate(wash_gov_origin~district_id, data=district_wash, full_modes,na.action = na.omit), c("district_id", "moda")), by="district_id")
+      
+      district_wash[ , moda := full_modes(wash_gov_origin),by = district_id]
+      
+      ######
     governorate_all<-df1%>%
       aggregate_median("governorate_id")
     
