@@ -55,6 +55,13 @@ border:0;
 margin : 0;
 padding : 50px;
 }
+#cite4 {
+  position: fixed;
+bottom: 10px;
+left: 10px;
+font-size: 12px;
+font-weight: bold;
+}
 
 /* If not using map tiles, show a white background */
   .leaflet-container {

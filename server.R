@@ -547,8 +547,6 @@ server<-function(input, output,session) {
     exchange_rate<-exchange_date[1,10]
     
     valueBox(
-            #title = "Exchange Rate for selected month in table (please select month to populate information box)",
-            #title="test",
             value = exchange_rate,
             subtitle="YER to 1 USD", 
             icon = icon("dollar"),

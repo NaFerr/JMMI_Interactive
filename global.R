@@ -20,6 +20,7 @@ library(ggplot2)
 library(sp)
 library(purrr)
 library(shinydashboard)
+library(rowr)
 
 addLegend_decreasing <- function (map, position = c("topright", "bottomright", "bottomleft", 
                                                     "topleft"), pal, values, na.label = "NA", bins = 7, colors, 
@@ -241,6 +242,9 @@ currentD <- as.character(format(max(AdminNatTable$date2),"%B %Y")) #define curre
 Admin1<- readOGR("./www", "YEM_adm1_Governorates")
 Admin2<- readOGR("./www", "YEM_adm2_Districts")
 
+Admin1@data$admin1name<-gsub("Amanat Al Asimah", "Sana'a City", Admin1@data$admin1name)
+Admin1@data$admin1refn<-gsub("Amanat Al Asimah", "Sana'a City", Admin1@data$admin1refn)
+Admin2@data$admin1name<-gsub("Amanat Al Asimah", "Sana'a City", Admin2@data$admin1name)
 #Admin2@data<-Admin2@data[,c(4,6,7,9,10)]
 Admin2@data<- Admin2@data %>% mutate_if(is.factor, as.character) 
 

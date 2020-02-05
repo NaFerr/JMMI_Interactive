@@ -87,15 +87,16 @@ navbarPage(theme= shinytheme("journal"),
                                       #new data table 
                                       hr(),
                                       selectInput(inputId= "varDateSelect", label = h4("Select Month of Data Collection"), choices=NULL, selected = (("varsDateSelect"))),#linked date stuff
+                                      h5("Please select a district to enable month selection"),
                                       h4(textOutput("text_DT")),
                                       DT::dataTableOutput("out_table_obs",height = "auto", width = "100%"),
                                       
                                       #####Attempt to add an info box
                                       hr(),
                                       h4("Exchange Rate for selected month in table"),
-                                      h5("(please select month to populate information box)"),
+                                      h5("Please select month to populate the information box"),
                                       fluidRow(valueBoxOutput("info_exchange", width = 12)),
-                                      #hr(),
+                                      hr(),
                                       #hr(),
                                       
                                       h6(htmlOutput("text1")),
@@ -179,9 +180,12 @@ navbarPage(theme= shinytheme("journal"),
                                           visit our",a("REACH Website", target="_blank",    href="https://www.reach-initiative.org"), "or contact us directly 
                                           at yemen@reach-initiative.org.")),
   
-                     
+                        hr(),
+                       p(),
+                      p(),
+                      hr(),
 
-                        tags$div(id="cite",
+                        tags$div(id="cite4",
                                  a(img(src='reach_logoInforming.jpg', width= "200px"), target="_blank", href="http://www.reach-initiative.org")))
                     ),
            
@@ -223,11 +227,12 @@ tabPanel(strong("Partners"),
              column(width=12, h5("Save the Children (SCI)",icon("check", "fa-2x")), img(src='0_sci.png', height= "50px", style='padding:1px;border:thin solid black;')),
              column(width=12, h5("Sustainable Development Foundation (SDF)"), img(src='0_sdf.jpg', height= "50px", style='padding:1px;border:thin solid black;')),
              column(width=12, h5("Solidarites International (SI)",icon("check", "fa-2x")), img(src='0_si.jpeg', height= "50px", style='padding:1px;border:thin solid black;')),
-             column(width=12, h5("Soul Yemen"), img(src='0_soul.png', height= "50px", style='padding:1px;border:thin solid black;')),
+             column(width=12, h5("Soul Yemen"), img(src='0_soul.jpg', height= "50px", style='padding:1px;border:thin solid black;')),
              column(width=12, h5("Tamdeen Youth Foundation (TYF)",icon("check", "fa-2x")), img(src='0_tyf.png', height= "50px", style='padding:1px;border:thin solid black;')),
              column(width=12, h5("Vision Hope"), img(src='0_vision.png', height= "50px", style='padding:1px;border:thin solid black;')),
-             column(width=12, h5("Yemen Family Care Association (YFCA)"), img(src='0_yfca.bmp', height= "50px", style='padding:1px;border:thin solid black;')),
-             column(width=12, h5("Yemen Shoreline Development (YSD)"), img(src='0_ysd.jpg', height= "50px", style='padding:1px;border:thin solid black;'))
+             column(width=12, h5("Yemen Family Care Association (YFCA)"), img(src='0_yfca.jpg', height= "50px", style='padding:1px;border:thin solid black;')),
+             column(width=12, h5("Yemen Shoreline Development (YSD)"), img(src='0_ysd.jpg', height= "50px", style='padding:1px;border:thin solid black;')),
+             hr()
              
              
 ))
