@@ -56,9 +56,9 @@ margin : 0;
 padding : 50px;
 }
 #cite4 {
-  position: fixed;
+  position: relative;
 bottom: 10px;
-left: 10px;
+right: 10px;
 font-size: 12px;
 font-weight: bold;
 }

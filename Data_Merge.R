@@ -40,6 +40,8 @@ August_2019<-read_excel("18.REACH_YEM_Dataset_Joint Market Monitoring Initiative
 September_2019<-read_excel("19.REACH_YEM_Dataset_Joint Market Monitoring Initiative (JMMI)_September2019.xlsx", sheet = 2)
 October_2019<-read_excel("20.REACH_YEM_Dataset_Joint Market Monitoring Initiative (JMMI)_October2019.xlsx", sheet = 2)
 November_2019<-read_excel("21.REACH_YEM_Dataset_Joint Market Monitoring Initiative (JMMI)_November2019.xlsx", sheet = 2)
+December_2019<-read_excel("22.REACH_YEM_Dataset_Joint Market Monitoring Initiative (JMMI)_December2019.xlsx", sheet = 3)
+
 
 
 list_df = setNames(lapply(ls(), function(x) get(x)), ls())
@@ -162,14 +164,14 @@ for(i in seq_along(date_list)){
       dplyr::count(district_id, jmmi)
   
     ####  
-    district_wash<-df1%>%
-      dplyr::select("district_id","jmmi","jmmi_date","wash_gov_origin")
+   # district_wash<-df1%>%
+    #  dplyr::select("district_id","jmmi","jmmi_date","wash_gov_origin")
     
-      test<-dplyr::summarise(dplyr::group_by(district_wash,district_id), dist_wash_mode = full_modes(wash_gov_origin))%>%as.data.frame()
+  #    test<-dplyr::summarise(dplyr::group_by(district_wash,district_id), dist_wash_mode = full_modes(wash_gov_origin))%>%as.data.frame()
       
-      merge(district_wash, setNames(aggregate(wash_gov_origin~district_id, data=district_wash, full_modes,na.action = na.omit), c("district_id", "moda")), by="district_id")
+   #   merge(district_wash, setNames(aggregate(wash_gov_origin~district_id, data=district_wash, full_modes,na.action = na.omit), c("district_id", "moda")), by="district_id")
       
-      district_wash[ , moda := full_modes(wash_gov_origin),by = district_id]
+    #  district_wash[ , moda := full_modes(wash_gov_origin),by = district_id]
       
       ######
     governorate_all<-df1%>%
@@ -254,6 +256,11 @@ this_script_path<-(dirname(rstudioapi::getActiveDocumentContext()$path))
 setwd(this_script_path)
 
 write.xlsx(final_list, file = "./data/updated_interactive.xlsx")
+
+#undo after all clear
+write.csv(district_final, file = "./data/district_interactive.csv")
+write.csv(governorate_final, file = "./data/governorate_interactive.csv")
+write.csv(national_final, file = "./data/national_interactive.csv")
 
 #set up google sheets dynamically
 #GS_dist<- gs_key('1NnQNwo3FnEyayGwUk-TUeSRxV04CkiqsDuTePpbYpWs') #Districts

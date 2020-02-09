@@ -29,7 +29,6 @@ navbarPage(theme= shinytheme("journal"),
                         
                         tags$head(
                           # Include our custom CSS
-                          shiny::includeCSS("styles.css"), #ENSURE CSS file IS USED 
                           includeCSS("AdminLTE.css"),
                           shiny::includeCSS( "bootstrap.css"), #added 
                           includeCSS(path = "shinydashboard.css"),
@@ -211,29 +210,29 @@ tabPanel(strong("Partners"),
              column(width=12, h5("Adventist Development and Relief Agency (ADRA)"), img(src='0_adra.jpg', height= "50px", style='padding:1px;border:thin solid black;')),
              column(width=12, h5("Al Thadamon Association"), img(src='0_thadamon.jpg', height= "50px", style='padding:1px;border:thin solid black;')),
              column(width=12, h5("Brains for Development (B4D)"),img(src='0_b4d.jpg', height= "50px", style='padding:1px;border:thin solid black;')),
-             column(width=12, h5("Creative Youth Foundation (CYF)"), img(src='0_cyf.png', height= "50px", style='padding:1px;border:thin solid black;')),
-             column(width=12, h5("Danish Refugee Council (DRC)",icon("check", "fa-2x")), img(src='0_drc.png', height= "50px", style='padding:1px;border:thin solid black;')),
+             column(width=12, h5("Creative Youth Foundation (CYF)"), a(img(src='0_cyf.jpg', height= "50px", style='padding:1px;border:thin solid black;'),target="_blank", href="https://www.facebook.com/cyf.org77/")),
+             column(width=12, h5("Danish Refugee Council (DRC)"), a(img(src='0_drc.png', height= "50px", style='padding:1px;border:thin solid black;'), target="_blank", href="http://www.drc.dk")),
              #column(width=12, h5("Generations without Qat (GWQ)"), img(src='0_gwq.png', height= "50px", style='padding:1px;border:thin solid black;')),
              #column(width=12, h5("LLMPO"), img(src='0_cyf.png', height= "50px", style='padding:1px;border:thin solid black;')),
              column(width=12, h5("International Organization for Migration (IOM)", icon("check", "fa-2x")), img(src='0_iom.png', height= "50px", style='padding:1px;border:thin solid black;')),
              column(width=12, h5("Mercy Corps (MC)"), img(src='0_mercy.jfif', height= "50px", style='padding:1px;border:thin solid black;')),
-             column(width=12, h5("National Foundation for Development and Humanitarian Response (NFDHR)",icon("check", "fa-2x")), img(src='0_nfdhr.png', height= "50px", style='padding:1px;border:thin solid black;')),
+             column(width=12, h5("National Foundation for Development and Humanitarian Response (NFDHR)",icon("check", "fa-2x")), a(img(src='0_nfdhr.png', height= "50px", style='padding:1px;border:thin solid black;'),target="_blank", href="http://nfdhr.org/")),
              column(width=12, h5("National Forum Human Development (NFHD)", icon("check", "fa-2x")), img(src='0_nfhd.png', height= "50px", style='padding:1px;border:thin solid black;')),
              column(width=12, h5("Norweigan Refugee Council (NRC)"), img(src='0_nrc.png', height= "50px", style='padding:1px;border:thin solid black;')),
-             column(width=12, h5("Old City Foundation for Development (OCFD)",icon("check", "fa-2x")), img(src='0_ocfd.jpg', height= "50px", style='padding:1px;border:thin solid black;')),
-             column(width=12, h5("OXFAM",icon("check", "fa-2x")), img(src='0_oxfam.png', height= "50px", style='padding:1px;border:thin solid black;')),
-             column(width=12, h5("Rising Org. for Children Rights Development (ROC)",icon("check", "fa-2x")), img(src='0_roc.jpg', height= "50px", style='padding:1px;border:thin solid black;')),
+             column(width=12, h5("Old City Foundation for Development (OCFD)"), img(src='0_ocfd.jpg', height= "50px", style='padding:1px;border:thin solid black;')),
+             column(width=12, h5("OXFAM"), img(src='0_oxfam.png', height= "50px", style='padding:1px;border:thin solid black;')),
+             column(width=12, h5("Rising Org. for Children Rights Development (ROC)",icon("check", "fa-2x")), a(img(src='0_roc.jpg', height= "50px", style='padding:1px;border:thin solid black;'), target="_blank", href="https://rocye.org/")),
              #column(width=12, h5("SAMA"), img(src='0_cyf.png', height= "50px", style='padding:1px;border:thin solid black;')),
              column(width=12, h5("Save the Children (SCI)",icon("check", "fa-2x")), img(src='0_sci.png', height= "50px", style='padding:1px;border:thin solid black;')),
              column(width=12, h5("Sustainable Development Foundation (SDF)"), img(src='0_sdf.jpg', height= "50px", style='padding:1px;border:thin solid black;')),
-             column(width=12, h5("Solidarites International (SI)",icon("check", "fa-2x")), img(src='0_si.jpeg', height= "50px", style='padding:1px;border:thin solid black;')),
+             column(width=12, h5("Solidarites International (SI)"), img(src='0_si.jpeg', height= "50px", style='padding:1px;border:thin solid black;')),
              column(width=12, h5("Soul Yemen"), img(src='0_soul.jpg', height= "50px", style='padding:1px;border:thin solid black;')),
              column(width=12, h5("Tamdeen Youth Foundation (TYF)",icon("check", "fa-2x")), img(src='0_tyf.png', height= "50px", style='padding:1px;border:thin solid black;')),
              column(width=12, h5("Vision Hope"), img(src='0_vision.png', height= "50px", style='padding:1px;border:thin solid black;')),
              column(width=12, h5("Yemen Family Care Association (YFCA)"), img(src='0_yfca.jpg', height= "50px", style='padding:1px;border:thin solid black;')),
              column(width=12, h5("Yemen Shoreline Development (YSD)"), img(src='0_ysd.jpg', height= "50px", style='padding:1px;border:thin solid black;')),
              hr()
-             
+
              
 ))
 )

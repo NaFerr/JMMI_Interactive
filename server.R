@@ -111,7 +111,9 @@ server<-function(input, output,session) {
       unitA=" YER"
       title<-"Price (Cubic m)"
       title_legend<-title
-    }
+    
+      
+      }
   
     #Have a vector of all of the districts that currently have data for the current month
     dataM_NAs<-dataM@data%>%
