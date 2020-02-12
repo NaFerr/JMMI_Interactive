@@ -20,6 +20,8 @@ library(openxlsx)
 setwd("C:/Users/REACH_AO_YEMEN/Dropbox/REACH/YEM/YEM Assessment/YEM Cash and Markets/02_JMMI/4. Datasets and Data Analysis/Datasets/")
 
 #All data saved on the z drive
+#MAKE SURE YOU ARE PULLING THE RIGHT SHEET (DO NOT PULL THE RAW DATA SHEET)
+
 April_2018 <- read_excel("2.REACH_YEM_Dataset_Joint Market Monitoring Initiative (JMMI)_April2018_recode_cols.xlsx",sheet = 2)
 May_2018 <- read_excel("3.REACH_YEM_Dataset_Joint Market Monitoring Initiative (JMMI)_May2018_recode_cols.xlsx",sheet = 2)
 June_2018 <- read_excel("4.REACH_YEM_Dataset_Joint Market Monitoring Initiative (JMMI)_June2018_recode_cols.xlsx", sheet=2)
@@ -39,7 +41,7 @@ July_2019<-read_excel("17.REACH_YEM_Dataset_Joint Market Monitoring Initiative (
 August_2019<-read_excel("18.REACH_YEM_Dataset_Joint Market Monitoring Initiative (JMMI)_August2019.xlsx", sheet = 2)
 September_2019<-read_excel("19.REACH_YEM_Dataset_Joint Market Monitoring Initiative (JMMI)_September2019.xlsx", sheet = 2)
 October_2019<-read_excel("20.REACH_YEM_Dataset_Joint Market Monitoring Initiative (JMMI)_October2019.xlsx", sheet = 2)
-November_2019<-read_excel("21.REACH_YEM_Dataset_Joint Market Monitoring Initiative (JMMI)_November2019.xlsx", sheet = 2)
+November_2019<-read_excel("21.REACH_YEM_Dataset_Joint Market Monitoring Initiative (JMMI)_November2019.xlsx", sheet = 3)
 December_2019<-read_excel("22.REACH_YEM_Dataset_Joint Market Monitoring Initiative (JMMI)_December2019.xlsx", sheet = 3)
 
 

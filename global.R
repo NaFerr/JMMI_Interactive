@@ -186,7 +186,9 @@ GSh<-read.csv("data/governorate_interactive.csv")%>%
 #GSh[4:13]<-as.numeric(GSh[4:13])
   #GSh[4:12]<-as_tibble(as.numeric(as.character(unlist(GSh[4:12]))))#Governorates
   Admin1data <- mutate(GSh, SMEB = as.numeric((soap*10.5+laundry_powder*20+sanitary_napkins*2+as.numeric(cost_cubic_meter)*3.15))) #The SMEB calculation
-
+  Admin1data$SMEB<-round(Admin1data$SMEB,0)
+  
+  
 #GSh2<- read_sheet('https://docs.google.com/spreadsheets/d/1NnQNwo3FnEyayGwUk-TUeSRxV04CkiqsDuTePpbYpWs/edit#gid=0')%>% #Districts
 #GSh2<-read_excel("data/updated_interactive.xlsx",sheet = 1)%>%
 GSh2<-read.csv("data/district_interactive.csv")%>%
@@ -195,7 +197,8 @@ GSh2<-read.csv("data/district_interactive.csv")%>%
 #GSh2[6:15]<-as.numeric(GSh2[6:15])
 #  GSh2[6:14]<-as_tibble(as.numeric(as.character(unlist(GSh2[6:14])))) #first worksheet
   Admin2data <- mutate(GSh2, SMEB = as.numeric((soap*10.5+laundry_powder*20+sanitary_napkins*2+as.numeric(cost_cubic_meter)*3.15))) #The SMEB caluclation
-
+  Admin2data$SMEB<-round(Admin2data$SMEB,0)
+  
 #GShnat<-read_sheet('https://docs.google.com/spreadsheets/d/1k4CUjmjXRSRh6bm-JC8IaAAo5fuGIM-8_IzQC8hZF6c/edit#gid=0')%>%#National
 #GShnat<-read_excel("data/updated_interactive.xlsx",sheet = 3)%>%
 GShnat<-read.csv("data/national_interactive.csv")%>%
@@ -204,12 +207,13 @@ GShnat<-read.csv("data/national_interactive.csv")%>%
 #GShnat[2:11]<-as.numeric(GShnat[2:11])
  # GShnat[2:10]<-as_tibble(as.numeric(as.character(unlist(GShnat[2:10])))) #first worksheet
   AdminNatData<-mutate(GShnat,SMEB = as.numeric((soap*10.5+laundry_powder*20+sanitary_napkins*2+as.numeric(cost_cubic_meter)*3.15))) #The SMEB caluclation)
-
+  AdminNatData$SMEB<-round(AdminNatData$SMEB,0)
+  
 #Wrangle Data into appropriate formats
 #Governorates
 Admin1table<-as.data.frame(Admin1data)
 Admin1table$date2<- as.Date(Admin1table$date, format("%d-%b-%y"), tz="UTC")
-Admin1table$date2 <- as.yearmon(Admin1table$date)
+Admin1table$date2 <- as.Date(as.yearmon(Admin1table$date))
 #Admin1table$date2<- as.Date(x=paste("01-",Admin1table$date, sep=""), format="%d-%b-%y") #format a date column
 #Admin1table$date <- as.yearmon(Admin1table$date2)
 
@@ -221,8 +225,8 @@ Admin1table[4:14] <- sapply(Admin1table[4:14], as.numeric)
 
 #Districts
 Admin2table <- as.data.frame(Admin2data)
-Admin2table$date2<- as.Date(Admin2table$date, format("%d-%b-%y"), tz="UTC")
-Admin2table$date2 <- as.yearmon(Admin2table$date)
+#Admin2table$date2<- as.Date(Admin2table$date, format("%d-%b-%y"), tz="UTC")
+Admin2table$date2 <- as.Date(as.yearmon(Admin2table$date))
 #Admin2table$date2 <- as.Date(x=paste("01-",Admin2table$date, sep=""), format="%d-%b-%y") #format a date column
 #Admin2table$date <- as.yearmon(Admin2table$date2)
 
@@ -230,12 +234,12 @@ Admin2data_current <- Admin2table %>% #subset only recent month dates to attach 
   arrange(desc(date2)) %>%
   filter(date2 == max(date2))
 currentD <- as.character(format(max(Admin2table$date2),"%B %Y")) #define current date for disply in dashboard
-Admin2table[7:17] <- sapply(Admin2table[7:17], as.numeric)
+Admin2table[7:16] <- sapply(Admin2table[7:16], as.numeric)
 
 #National
 AdminNatTable<-as.data.frame(AdminNatData)
-AdminNatTable$date2<- as.Date(AdminNatTable$date, format("%d-%b-%y"), tz="UTC")
-AdminNatTable$date2 <- as.yearmon(AdminNatTable$date)
+#AdminNatTable$date2<- as.Date(AdminNatTable$date, format("%d-%b-%y"), tz="UTC")
+AdminNatTable$date2 <- as.Date(as.yearmon(AdminNatTable$date))
 #AdminNatTable$date2 <- as.Date(x=paste("01-",AdminNatTable$date, sep=""), format="%d-%b-%y")#format a date column
 #AdminNatTable$date <- as.yearmon(AdminNatTable$date2)
 
