@@ -20,11 +20,11 @@ server<-function(input, output,session) {
       dataM<-Rshp[,c(1,5,7,8,10,29,28,30)] #subset exchange rate col
       #mypal<-colorNumeric( palette="RdYlGn", domain=(dataM@data[,6]), na.color = "#9C9D9F", reverse = T)
       mypal<-colorNumeric( palette=(colorRamp(c("#ADFFA5", "#A7383D", "#420A0D"), interpolate="linear")),domain=dataM@data[,6], na.color = "#D0CFCF", reverse = F)
-      pLa<-"SMEB: "
-      pLa2<-"SMEB"
+      pLa<-"WASH SMEB: "
+      pLa2<-"WASH SMEB"
       en<-" "
       unitA=" YER"
-      title_legend<-"Price"
+      title_legend<-"WASH SMEB Cost"
     }
     if (VARIA == "exchange_rates") {
       dataM<-Rshp[,c(1,5,7,8,10,27,28,30)] #subset exchange rate col
@@ -465,7 +465,7 @@ server<-function(input, output,session) {
     }
     
     if (input$variable1 == "cost_cubic_meter"){
-      y= "Cost of Cubic Meter"
+      y= "Water Trucking Price"
     }
     
     y
@@ -567,10 +567,9 @@ server<-function(input, output,session) {
   })
   #
   output$text2 <- renderUI({
-    HTML(paste("<i>Note: Data, designations and boundaries contained on
-               this map are not warranted to error-free and do not
-               imply acceptance by the REACH partners, associated
-               donors mentioned on this map</i>",
+    HTML(paste("<i>Note: Data displayed on this map should be interpreted as indicative. 
+               In addition, designations and boundaries used here do not imply acceptance 
+               by REACH partners and associated donors.</i>",
                sep="<br/>"), '<style type="text/css"> .shiny-html-output { font-size: 11px; line-height: 11px;
          font-family: Helvetica} </style>')
   })
@@ -579,11 +578,11 @@ server<-function(input, output,session) {
   })
 
   output$text_DT<-renderText({
-    paste(chartNAME(), " Median Monthly Costs and Number of Markets Assessed")
+    paste0(chartNAME(),", Median Monthly Costs, and Number of Markets Assessed")
   })
   
   output$text4 <- renderUI({
-    HTML(paste("<i>For more information, please contact For more information, please visit our",a("REACH Website", target="_blank", href="https://www.reach-initiative.org"), 
+    HTML(paste("<i>For more information, please visit our",a("REACH Website", target="_blank", href="https://www.reach-initiative.org"), 
     "or contact us directly at yemen@reach-initiative.org.</i>"), '<style type="text/css"> .shiny-html-output { font-size: 11px; line-height: 11px;
          font-family: Helvetica} </style>')
   })
