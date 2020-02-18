@@ -3,7 +3,7 @@
 
 #DROP DOWN MENU SELECTIONS 
 vars1 <- c(
-  "SMEB"="SMEB",
+  "WASH SMEB"="SMEB",
   "Parallel Exchange Rates"="exchange_rates",
   "Petrol" = "petrol",
   "Diesel" = "diesel",
@@ -59,26 +59,27 @@ navbarPage(theme= shinytheme("journal"),
                                       width = 500, height = "auto", 
                                       
                                       hr(),
-                                      h4("The Yemen Joint Market Monitoring Initiative (JMMI) is a harmonized price monitoriong initiative that focuses on informing
+                                      h5("The Yemen Joint Market Monitoring Initiative (JMMI) is a harmonized price monitoriong initiative that focuses on informing
                                       the Water, Sanitation, and Hygiene (WASH) Cluster and the Cash 
                                       and Market Working Group (CMWG) to support humanitarian activies throughout Yemen.  
                                       The JMMI provides an indicative estimation of the prices of WASH and fuel items across districts in Yemen."),
                                       
-                                      h4(p("The districts shaded in color on this map represent the most recent data collected from (number) districts in (month/year).
-                                        The districts outlined in red indicate that data for the selected item was collected in that district in previous months.")),
+                                      h5(tags$u("Most recent findings displayed in map are from data collected in ", #DistsNumn and currentD will change based on the most recent JMMI, defined in global.R
+                                                tags$strong(DistsNumb), "districts in ", tags$strong(paste0(currentD,"."))),
+                                        ("The districts outlined in red indicate that data for the selected item was collected in that district in previous months.")),
                                       
-                                      h4("Further details regarding the JMMI methodology and the Survival Minimum Expenditure Basket (SMEB) calculation can be found on the information tab. 
+                                      h5("Further details regarding the JMMI methodology and the Survival Minimum Expenditure Basket (SMEB) calculation can be found on the information tab. 
                                          For additional information on supply chains and market-related concerns, please visit the  ",a("REACH Resource Center", target="_blank",    href="https://www.reachresourcecentre.info/country/yemen/cycle/754/#cycle-754"), " to access the monthly situation overviews."),
                                       
                                       hr(),
                                       
-                                      h4(tags$u("Most recent findings displayed in map are from data collected in ", #DistsNumn and currentD will change based on the most recent JMMI, defined in global.R
-                                         tags$strong(DistsNumb), "districts in ", tags$strong(currentD))),
+                                      #h5(tags$u("Most recent findings displayed in map are from data collected in ", #DistsNumn and currentD will change based on the most recent JMMI, defined in global.R
+                                      #   tags$strong(DistsNumb), "districts in ", tags$strong(currentD))),
                                       
                                       selectInput("variable1", h4("Select Variable Below"), vars1, selected = "SMEB"), #linked text
                                       
                                     
-                                      h4(textOutput("text3")), #extra small text which had to be customized as an html output in server.r (same with text1 and text 2)
+                                      h5(textOutput("text3")), #extra small text which had to be customized as an html output in server.r (same with text1 and text 2)
                                       
                                       #HIGH CHART
                                       highchartOutput("hcontainer", height= 300, width = 450),
@@ -87,12 +88,12 @@ navbarPage(theme= shinytheme("journal"),
                                       hr(),
                                       selectInput(inputId= "varDateSelect", label = h4("Select Month of Data Collection"), choices=NULL, selected = (("varsDateSelect"))),#linked date stuff
                                       h5("Please select a district to enable month selection"),
-                                      h4(textOutput("text_DT")),
+                                      h5(textOutput("text_DT")),
                                       DT::dataTableOutput("out_table_obs",height = "auto", width = "100%"),
                                       
                                       #####Attempt to add an info box
                                       hr(),
-                                      h4("Exchange Rate for selected month in table"),
+                                      h5("Exchange Rate for selected month"),
                                       h5("Please select month to populate the information box"),
                                       fluidRow(valueBoxOutput("info_exchange", width = 12)),
                                       hr(),
@@ -132,11 +133,11 @@ navbarPage(theme= shinytheme("journal"),
                         
                         column(width=8,h3("Overview")), #h1- h5 change the header level of the text
                         
-                        column(width=7,h5("The Yemen Joint Market Monitoring Initiative (JMMI) was launched by 
-                                          REACH in collaboration with the Water, Sanitation, and Hygiene (WASH) 
-                                          Cluster and the Cash and Market Working Group (CMWG) to support 
-                                          humanitarian actors with the harmonization of price monitoring among 
-                                          all cash actors in Yemen. The basket of goods assessed includes eight 
+                        column(width=7,h5("The  Yemen  Joint  Market  Monitoring  Initiative  (JMMI) is an
+                                          initative led by REACH in collaboration with the Water, Sanitation,
+                                          and Hygiene (WASH) Cluster  and the Cash and Market Working Group (CMWG)
+                                          to support humanitarian cash actors with the harmonization of price
+                                          monitoring throughout Yemen. The basket of goods assessed includes eight 
                                           non-food items (NFIs), including fuel, water and hygiene products, 
                                           reflecting the programmatic areas of the WASH Cluster. The JMMI 
                                           tracks all components of the WASH Survival Minimum Expenditure Basket 
@@ -202,35 +203,36 @@ tabPanel(strong("Partners"),
                tags$style(HTML(".sidebar {height:50vh; overflow-y:auto; }"))
              ),
              
-             column(width=8,h3("Partners Past and Present")), #h1- h5 change the header level of the text
-             column(width=7, h6(tags$i("Check marks indicate current participating partner in indicated month"))),
+             column(width=8,h3("Partners (Past and Present)")), #h1- h5 change the header level of the text
+             column(width=7, h6(tags$i("Check marks indicate that the partner participated in the most recent month’s JMMI"))),
              
              #list of partners orgs
-             column(width=12, h5("Agency for Technical Cooperation and Development (ACTED)"),a(img(src='0_acted.png', height= "50px", style='padding:1px;border:thin solid black;'), target="_blank", href="https://www.acted.org/en/countries/yemen/")),
-             column(width=12, h5("Adventist Development and Relief Agency (ADRA)"), img(src='0_adra.jpg', height= "50px", style='padding:1px;border:thin solid black;')),
-             column(width=12, h5("Al Thadamon Association"), img(src='0_thadamon.jpg', height= "50px", style='padding:1px;border:thin solid black;')),
-             column(width=12, h5("Brains for Development (B4D)"),img(src='0_b4d.jpg', height= "50px", style='padding:1px;border:thin solid black;')),
-             column(width=12, h5("Creative Youth Foundation (CYF)"), a(img(src='0_cyf.jpg', height= "50px", style='padding:1px;border:thin solid black;'),target="_blank", href="https://www.facebook.com/cyf.org77/")),
-             column(width=12, h5("Danish Refugee Council (DRC)"), a(img(src='0_drc.png', height= "50px", style='padding:1px;border:thin solid black;'), target="_blank", href="http://www.drc.dk")),
-             #column(width=12, h5("Generations without Qat (GWQ)"), img(src='0_gwq.png', height= "50px", style='padding:1px;border:thin solid black;')),
-             #column(width=12, h5("LLMPO"), img(src='0_cyf.png', height= "50px", style='padding:1px;border:thin solid black;')),
-             column(width=12, h5("International Organization for Migration (IOM)", icon("check", "fa-2x")), img(src='0_iom.png', height= "50px", style='padding:1px;border:thin solid black;')),
-             column(width=12, h5("Mercy Corps (MC)"), img(src='0_mercy.jfif', height= "50px", style='padding:1px;border:thin solid black;')),
-             column(width=12, h5("National Foundation for Development and Humanitarian Response (NFDHR)",icon("check", "fa-2x")), a(img(src='0_nfdhr.png', height= "50px", style='padding:1px;border:thin solid black;'),target="_blank", href="http://nfdhr.org/")),
-             column(width=12, h5("National Forum Human Development (NFHD)", icon("check", "fa-2x")), img(src='0_nfhd.png', height= "50px", style='padding:1px;border:thin solid black;')),
-             column(width=12, h5("Norweigan Refugee Council (NRC)"), img(src='0_nrc.png', height= "50px", style='padding:1px;border:thin solid black;')),
-             column(width=12, h5("Old City Foundation for Development (OCFD)"), img(src='0_ocfd.jpg', height= "50px", style='padding:1px;border:thin solid black;')),
-             column(width=12, h5("OXFAM"), img(src='0_oxfam.png', height= "50px", style='padding:1px;border:thin solid black;')),
-             column(width=12, h5("Rising Org. for Children Rights Development (ROC)",icon("check", "fa-2x")), a(img(src='0_roc.jpg', height= "50px", style='padding:1px;border:thin solid black;'), target="_blank", href="https://rocye.org/")),
-             #column(width=12, h5("SAMA"), img(src='0_cyf.png', height= "50px", style='padding:1px;border:thin solid black;')),
-             column(width=12, h5("Save the Children (SCI)",icon("check", "fa-2x")), img(src='0_sci.png', height= "50px", style='padding:1px;border:thin solid black;')),
-             column(width=12, h5("Sustainable Development Foundation (SDF)"), img(src='0_sdf.jpg', height= "50px", style='padding:1px;border:thin solid black;')),
-             column(width=12, h5("Solidarites International (SI)"), img(src='0_si.jpeg', height= "50px", style='padding:1px;border:thin solid black;')),
-             column(width=12, h5("Soul Yemen"), img(src='0_soul.jpg', height= "50px", style='padding:1px;border:thin solid black;')),
-             column(width=12, h5("Tamdeen Youth Foundation (TYF)",icon("check", "fa-2x")), img(src='0_tyf.png', height= "50px", style='padding:1px;border:thin solid black;')),
-             column(width=12, h5("Vision Hope"), img(src='0_vision.png', height= "50px", style='padding:1px;border:thin solid black;')),
-             column(width=12, h5("Yemen Family Care Association (YFCA)"), img(src='0_yfca.jpg', height= "50px", style='padding:1px;border:thin solid black;')),
-             column(width=12, h5("Yemen Shoreline Development (YSD)"), img(src='0_ysd.jpg', height= "50px", style='padding:1px;border:thin solid black;')),
+             column(width=12,align = "center", h5("Agency for Technical Cooperation and Development (ACTED)"),a(img(src='0_acted.png', height= "50px"), target="_blank", href="https://www.acted.org/en/countries/yemen/")),
+             column(width=12,align = "center", h5("Adventist Development and Relief Agency (ADRA)"), a(img(src='0_adra.png', height= "50px"), target = "_blank", href="https://adra.org/")),
+             column(width=12,align = "center", h5("Al Thadamon Association"), img(src='0_thadamon.jpg', height= "50px")),
+             column(width=12,align = "center", h5("Brains for Development (B4D)"),img(src='0_b4d.jpg', height= "50px")),
+             column(width=12,align = "center", h5("Creative Youth Forum (CYF)"), a(img(src='0_cyf.jpg', height= "50px"),target="_blank", href="https://www.facebook.com/cyf.org77/")),
+             column(width=12,align = "center", h5("Danish Refugee Council (DRC)"), a(img(src='0_drc.png', height= "50px"), target="_blank", href="http://www.drc.dk")),
+             #column(width=12,align = "center", h5("Generations without Qat (GWQ)"), img(src='0_gwq.png', height= "50px")),
+             #column(width=12,align = "center", h5("LLMPO"), img(src='0_cyf.png', height= "50px")),
+             column(width=12,align = "center", h5("International Organization for Migration (IOM)", icon("check", "fa-2x")), img(src='0_iom.png', height= "50px")),
+             column(width=12,align = "center", h5("Mercy Corps (MC)"), img(src='0_mercy.jfif', height= "50px")),
+             column(width=12,align = "center", h5("National Foundation for Development and Humanitarian Response (NFDHR)",icon("check", "fa-2x")), a(img(src='0_nfdhr.png', height= "50px"),target="_blank", href="http://nfdhr.org/")),
+             column(width=12,align = "center", h5("National Forum Human Development (NFHD)", icon("check", "fa-2x")), img(src='0_nfhd.png', height= "50px")),
+             column(width=12,align = "center", h5("Norweigan Refugee Council (NRC)"), img(src='0_nrc.png', height= "50px")),
+             column(width=12,align = "center", h5("Old City Foundation for Development (OCFD)"), img(src='0_ocfd.jpg', height= "50px")),
+             column(width=12,align = "center", h5("OXFAM"), img(src='0_oxfam.png', height= "50px")),
+             column(width=12,align = "center", h5("Rising Org. for Children Rights Development (ROC)",icon("check", "fa-2x")), a(img(src='0_roc.jpg', height= "50px"), target="_blank", href="https://rocye.org/")),
+             #column(width=12,align = "center", h5("SAMA"), img(src='0_cyf.png', height= "50px")),
+             column(width=12,align = "center", h5("Save the Children (SCI)",icon("check", "fa-2x")), img(src='0_sci.png', height= "50px")),
+             column(width=12,align = "center", h5("Sustainable Development Foundation (SDF)"), img(src='0_sdf.jpg', height= "50px")),
+             column(width=12,align = "center", h5("Solidarites International (SI)"), img(src='0_si.jpeg', height= "50px")),
+             column(width=12,align = "center", h5("Soul Yemen"), img(src='0_soul.jpg', height= "50px")),
+             column(width=12,align = "center", h5("Tamdeen Youth Foundation (TYF)",icon("check", "fa-2x")), img(src='0_tyf.png', height= "50px")),
+             column(width=12,align = "center", h5("Vision Hope"), img(src='0_vision.png', height= "50px")),
+             column(width=12,align = "center", h5("Yemen Family Care Association (YFCA)"), img(src='0_yfca.jpg', height= "50px")),
+             column(width=12,align = "center", h5("Yemen Shoreline Development (YSD)"), img(src='0_ysd.jpg', height= "50px")),
+             p(),
              hr()
 
              

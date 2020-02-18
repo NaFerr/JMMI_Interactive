@@ -368,7 +368,7 @@ colnames(YEMl@data) <- c("index","name","lon", "lat")
 # 
 
 vars <- c(
-  "SMEB"="SMEB",
+  "WASH SMEB"="SMEB",
   "Parallel Exchange Rates"="exchange_rates",
   "Petrol" = "petrol",
   "Diesel" = "diesel",

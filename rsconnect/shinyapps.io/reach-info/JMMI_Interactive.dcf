@@ -5,8 +5,8 @@ account: reach-info
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 1751186
-bundleId: 2794250
+bundleId: 2808924
 url: https://reach-info.shinyapps.io/JMMI_Interactive/
-when: 1581495474.42795
+when: 1582030187.65143
 asMultiple: FALSE
 asStatic: FALSE
