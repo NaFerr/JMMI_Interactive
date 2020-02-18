@@ -207,6 +207,7 @@ tabPanel(strong("Partners"),
              column(width=7, h6(tags$i("Check marks indicate that the partner participated in the most recent month’s JMMI"))),
              
              #list of partners orgs
+
              column(width=12,align = "center", h5("Agency for Technical Cooperation and Development (ACTED)"),a(img(src='0_acted.png', height= "50px"), target="_blank", href="https://www.acted.org/en/countries/yemen/")),
              column(width=12,align = "center", h5("Adventist Development and Relief Agency (ADRA)"), a(img(src='0_adra.png', height= "50px"), target = "_blank", href="https://adra.org/")),
              column(width=12,align = "center", h5("Al Thadamon Association"), img(src='0_thadamon.jpg', height= "50px")),
@@ -233,6 +234,7 @@ tabPanel(strong("Partners"),
              column(width=12,align = "center", h5("Yemen Family Care Association (YFCA)"), img(src='0_yfca.jpg', height= "50px")),
              column(width=12,align = "center", h5("Yemen Shoreline Development (YSD)"), img(src='0_ysd.jpg', height= "50px")),
              p(),
+
              hr()
 
              
