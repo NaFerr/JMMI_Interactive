@@ -207,7 +207,7 @@ tabPanel(strong("Partners"),
              
              #list of partners orgs
              column(width=12, h5("Agency for Technical Cooperation and Development (ACTED)"),img(src='0_acted.png', height= "50px", style='padding:1px;border:thin solid black;')),
-             column(width=12, h5("Adventist Development and Relief Agency (ADRA)"), img(src='0_adra.jpg', height= "50px", style='padding:1px;border:thin solid black;')),
+             column(width=12, h5("Adventist Development and Relief Agency (ADRA)",icon("check", "fa-2x")), img(src='0_adra.png', height= "50px", style='padding:1px;border:thin solid black;'),target="_blank", href="https://adra.org/")),
              column(width=12, h5("Al Thadamon Association"), img(src='0_thadamon.jpg', height= "50px", style='padding:1px;border:thin solid black;')),
              column(width=12, h5("Brains for Development (B4D)"),img(src='0_b4d.jpg', height= "50px", style='padding:1px;border:thin solid black;')),
              column(width=12, h5("Creative Youth Foundation (CYF)"), a(img(src='0_cyf.jpg', height= "50px", style='padding:1px;border:thin solid black;'),target="_blank", href="https://www.facebook.com/cyf.org77/")),
