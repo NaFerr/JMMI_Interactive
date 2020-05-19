@@ -257,9 +257,7 @@ tabPanel(strong("SMEB Tracker"),
               h2("SMEB costs by month and proposed percent change"),
               DT::dataTableOutput("table_smeb")
              #DT::dataTableOutput("mytable")
-         #,width=9
-                           #height="auto",width="100%")
-  
+      
                
            )
             )

@@ -295,7 +295,7 @@ DistsNumb<-sum(!is.na(Rshp@data$district_name)) #get number of districts covered
 # Reduce shapfile complexity for fast leaflet loading,  AND project
 #Keeps breaking on the ms_simplify cant get it to work at all, something about the data and columns not lining up
 #Rshp<-rgeos::gSimplify(Rshp,tol=0.5)
-#Rshp<-ms_simplify(Rshp, 0.5)
+Rshp<-ms_simplify(Rshp, 0.5)
 
 
 Rshp <- spTransform(x = Rshp, 
