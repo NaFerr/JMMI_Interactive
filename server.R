@@ -573,6 +573,7 @@ server<-function(input, output,session) {
                sep="<br/>"), '<style type="text/css"> .shiny-html-output { font-size: 11px; line-height: 11px;
          font-family: Helvetica} </style>')
   })
+  
   output$text3 <- renderText({ #LARGE TEXT ABOVE CHART
     paste(chartNAME(), " ", "Medians Over Time")
   })
@@ -586,11 +587,122 @@ server<-function(input, output,session) {
     "or contact us directly at yemen@reach-initiative.org.</i>"), '<style type="text/css"> .shiny-html-output { font-size: 11px; line-height: 11px;
          font-family: Helvetica} </style>')
   })
+  
+  output$mytable = DT::renderDataTable({
+  m_df<- mtcars%>% 
+     formatStyle(columns = `mpg`,
+                 color = styleInterval(17, (c('black','white'))),
+                 backgroundColor = styleInterval(17, (c('white','red'))))
+   
+  
+    #return(as.datatable(formattable(my_df, lapply(1:4, function(col){area(col = col) ~ color_tile("red", "green")}))))
+   
+  })
+  #formattable(mtcars, align = c("l",rep("r", NCOL(mtcars) - 1)), 
+   #           list(`mpg` = formatter("span", style = ~ style(color = "grey",font.weight = "bold")), 
+    #               area(col = 2:4) ~ function(x) percent(x / 100, digits = 0),
+     #              area(col = 2:3) ~ color_tile("#DeF7E9", "#71CA97")))%>%
+ 
   #
   
-}
+
+  
 
 
 
 #FRoM ONLINE https://github.com/ua-snap/shiny-apps/blob/master/cc4liteFinal/server.R
 
+#######################
+#SMEB tracker
+#######################
+#Goal - build system that can adapt to X# of months back and benchmark at YY%
+#Data needed - national but may need to clip to districts of each individual one based on methodology
+#So pull number of district from most recent month and clip back based on X# of months.
+#then build a table function that allows for that stuff to be adapted
+
+#build the dataset
+
+  
+output$table_smeb<-DT::renderDataTable({
+#observe({
+    #https://stackoverflow.com/questions/50912519/select-the-number-of-rows-to-display-in-a-datatable-based-on-a-slider-input
+time<-input$months
+percent_time<- input$percent/100
+
+
+#time<-6
+national_data_test<-nat_data()
+#national_data_test<-AdminNatTable
+national_data$date2 <- as.yearmon(national_data_test$date)
+national_data<-arrange(national_data,desc(date2))
+
+month_all<-sort(unique(national_data$date2),decreasing = T)
+time_pull<-month_all[time]
+month_list<-month_all[1:match(time_pull,month_all)]
+
+#now have the month_list which we can cut from in the future
+
+national_data_pull<-dplyr::filter(national_data, date2==month_list)%>%
+  dplyr::select(-c(date,num_obs,exchange_rates))
+
+
+national_data_pull<-national_data_pull%>%
+  reshape2::melt("date2")%>%
+  reshape2::dcast(variable ~ date2)%>%
+  round_df(.,0)
+
+col_data_pull<-ncol(national_data_pull)
+
+name_perc_change<-paste0("Percentage change between ",
+                         colnames(national_data_pull[2]),
+                         " - ",
+                         colnames(national_data_pull[col_data_pull]))
+#Add SMEB base costs
+  #https://stackoverflow.com/questions/13502601/add-insert-a-column-between-two-columns-in-a-data-frame
+national_data_pull<-national_data_pull%>%
+  add_column(.,  `SMEB Base`= c(365,430,100,120,100,150,500,2000,12000), .after = 1)%>%
+  add_column(.,  `Variable`= c("Petrol","Diesel","Bottled water","Treated water","Soap","Laundry powder","Sanitary napkins","Water trucking","SMEB total"), .after = 1)%>%
+  dplyr::select(c(-1))
+
+#get number of columns now we will use later in the formatting of the table
+  columns_of_data_begin<-ncol(national_data_pull)+1
+
+#get the column number of the percent change for future formatting
+percent_col<-time+2
+col_format_last<-time+1
+
+
+
+#https://duckduckgo.com/?q=dynamic+naming+in+mutate+R&t=brave&ia=web
+national_data_pull<-national_data_pull%>%
+  dplyr::mutate_at(., .vars = c(3:ncol(.)),.funs = list(`Percent Change from Base`= ~((.-(national_data_pull[,2]))/(national_data_pull[,2]))                                                        ))
+ 
+#get number of columns now we will use later in the formatting of the table 
+  columns_of_data_end<-ncol(national_data_pull)
+  
+#get rid of the weird naming from the mutate_at
+  names(national_data_pull) <- gsub("_", " ", names(national_data_pull))
+  
+#maybe keep for later
+  #dplyr::mutate(.,!!name_perc_change := (((.[,col_data_pull]-.[,2])/(.[,2]))))
+
+
+petrol_bench<-national_data_pull[2,2]*(1+percent_time)
+diesel_bench<-national_data_pull[3,2]*(1+percent_time)
+#Render the output DT
+    #https://stackoverflow.com/questions/60659666/changing-color-for-cells-on-dt-table-in-shiny
+    #https://blog.rstudio.com/2015/06/24/dt-an-r-interface-to-the-datatables-library/
+DT::datatable(national_data_pull, options = list(searching = F, paging = F, scrollX=T))%>%
+  DT::formatPercentage(columns = c(columns_of_data_begin:columns_of_data_end),2)%>%
+  formatStyle(columns = c(columns_of_data_begin:columns_of_data_end),
+      color = styleInterval(c(-percent_time,percent_time), c('white', 'black','white')),
+      backgroundColor = styleInterval(c(-percent_time,percent_time), c('red', 'white','red')),
+      fontWeight = styleInterval(c(-percent_time,percent_time),c('bold','normal','bold')))
+  
+
+  })
+  
+
+  
+  
+}

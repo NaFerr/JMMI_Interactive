@@ -208,25 +208,25 @@ tabPanel(strong("Partners"),
              
              #list of partners orgs
              column(width=12,align = "center", h5("Agency for Technical Cooperation and Development (ACTED)"),a(img(src='0_acted.png', height= "50px"), target="_blank", href="https://www.acted.org/en/countries/yemen/")),
-             column(width=12,align = "center", h5("Adventist Development and Relief Agency (ADRA)"), a(img(src='0_adra.png', height= "50px"), target = "_blank", href="https://adra.org/")),
+             column(width=12,align = "center", h5("Adventist Development and Relief Agency (ADRA)", icon("check", "fa-2x")), a(img(src='0_adra.png', height= "50px"), target = "_blank", href="https://adra.org/")),
              column(width=12,align = "center", h5("Al Thadamon Association"), img(src='0_thadamon.jpg', height= "50px")),
              column(width=12,align = "center", h5("Brains for Development (B4D)"),img(src='0_b4d.jpg', height= "50px")),
              column(width=12,align = "center", h5("Creative Youth Forum (CYF)"), a(img(src='0_cyf.jpg', height= "50px"),target="_blank", href="https://www.facebook.com/cyf.org77/")),
-             column(width=12,align = "center", h5("Danish Refugee Council (DRC)"), a(img(src='0_drc.png', height= "50px"), target="_blank", href="http://www.drc.dk")),
-             #column(width=12,align = "center", h5("Generations without Qat (GWQ)"), img(src='0_gwq.png', height= "50px")),
+             column(width=12,align = "center", h5("Danish Refugee Council (DRC)", icon("check", "fa-2x")), a(img(src='0_drc.png', height= "50px"), target="_blank", href="http://www.drc.dk")),
+             column(width=12,align = "center", h5("Generations without Qat (GWQ)", icon("check", "fa-2x")), img(src='0_gwq.png', height= "50px")),
              #column(width=12,align = "center", h5("LLMPO"), img(src='0_cyf.png', height= "50px")),
              column(width=12,align = "center", h5("International Organization for Migration (IOM)", icon("check", "fa-2x")), img(src='0_iom.png', height= "50px")),
              column(width=12,align = "center", h5("Mercy Corps (MC)"), img(src='0_mercy.jfif', height= "50px")),
              column(width=12,align = "center", h5("National Foundation for Development and Humanitarian Response (NFDHR)",icon("check", "fa-2x")), a(img(src='0_nfdhr.png', height= "50px"),target="_blank", href="http://nfdhr.org/")),
-             column(width=12,align = "center", h5("National Forum Human Development (NFHD)", icon("check", "fa-2x")), img(src='0_nfhd.png', height= "50px")),
-             column(width=12,align = "center", h5("Norweigan Refugee Council (NRC)"), img(src='0_nrc.png', height= "50px")),
-             column(width=12,align = "center", h5("Old City Foundation for Development (OCFD)"), img(src='0_ocfd.jpg', height= "50px")),
+             column(width=12,align = "center", h5("National Forum Human Development (NFHD)"), img(src='0_nfhd.png', height= "50px")),
+             column(width=12,align = "center", h5("Norweigan Refugee Council (NRC)", icon("check", "fa-2x")), img(src='0_nrc.png', height= "50px")),
+             column(width=12,align = "center", h5("Old City Foundation for Development (OCFD)", icon("check", "fa-2x")), img(src='0_ocfd.jpg', height= "50px")),
              column(width=12,align = "center", h5("OXFAM"), img(src='0_oxfam.png', height= "50px")),
              column(width=12,align = "center", h5("Rising Org. for Children Rights Development (ROC)",icon("check", "fa-2x")), a(img(src='0_roc.jpg', height= "50px"), target="_blank", href="https://rocye.org/")),
-             #column(width=12,align = "center", h5("SAMA"), img(src='0_cyf.png', height= "50px")),
+             column(width=12,align = "center", h5("Sama Al Yemen", icon("check", "fa-2x")), img(src='0_sama.jpg', height= "50px")),
              column(width=12,align = "center", h5("Save the Children (SCI)",icon("check", "fa-2x")), img(src='0_sci.png', height= "50px")),
              column(width=12,align = "center", h5("Sustainable Development Foundation (SDF)"), img(src='0_sdf.jpg', height= "50px")),
-             column(width=12,align = "center", h5("Solidarites International (SI)"), img(src='0_si.jpeg', height= "50px")),
+             column(width=12,align = "center", h5("Solidarites International (SI)", icon("check", "fa-2x")), img(src='0_si.jpeg', height= "50px")),
              column(width=12,align = "center", h5("Soul Yemen"), img(src='0_soul.jpg', height= "50px")),
              column(width=12,align = "center", h5("Tamdeen Youth Foundation (TYF)",icon("check", "fa-2x")), img(src='0_tyf.png', height= "50px")),
              column(width=12,align = "center", h5("Vision Hope"), img(src='0_vision.png', height= "50px")),
@@ -236,5 +236,36 @@ tabPanel(strong("Partners"),
              hr()
 
              
-))
+)),
+tabPanel(strong("SMEB Tracker"),
+         
+       
+         style=("{overflow-y:auto; }"), 
+         icon= icon("bar-chart"), #info-circle
+         div(tags$head(
+         # Include our custom CSS
+          tags$style(".fa-check {color:#008000}"),
+         tags$style(HTML(".sidebar {height:50vh; overflow-y:auto; }"))
+         ),
+         sidebarLayout(
+          sidebarPanel(
+                      sliderInput("months","Number of months to measure", min = 1, max = 24, step = 1,value = 6, ticks = F),
+                      sliderInput("percent","Percentage benchmark", min = 1, max = 100, value = 20, tick=F),
+                      width=3),
+        
+            mainPanel(
+              h2("SMEB costs by month and proposed percent change"),
+              DT::dataTableOutput("table_smeb")
+             #DT::dataTableOutput("mytable")
+         #,width=9
+                           #height="auto",width="100%")
+  
+               
+           )
+            )
+         
+         
+         
+         
+         ))
 )

@@ -23,6 +23,10 @@ library(shinydashboard)
 library(rowr)
 library(gargle)
 library(readxl)
+library(DT)
+library(formattable)
+library(tibble)
+require(sp)
 
 addLegend_decreasing <- function (map, position = c("topright", "bottomright", "bottomleft", 
                                                     "topleft"), pal, values, na.label = "NA", bins = 7, colors, 
@@ -127,6 +131,15 @@ addLegend_decreasing <- function (map, position = c("topright", "bottomright", "
                  layerId = layerId, className = className, group = group)
   invokeMethod(map, data, "addLegend", legend)
 }
+
+round_df <- function(df, digits) {
+  nums <- vapply(df, is.numeric, FUN.VALUE = logical(1))
+  
+  df[,nums] <- round(df[,nums], digits = digits)
+  
+  (df)
+}
+
 
 
 ##-------------------------- TABULAR DATA WRANGLE ----------------------
@@ -271,6 +284,7 @@ Admin2@data<- Admin2@data %>% mutate_if(is.factor, as.character)
 ##-------------------------- COMBINE TABULAR & SPATIAL DATA----------------------
 #Merge data from Google Sheet with Rayon shp file
 Rshp <- merge(x=Admin2,y=Admin2data_current, by.x="admin2pcod", by.y= "district_ID")
+
 #delete extra X column in Rshp Data
 #Rshp@data<-dplyr::select(Rshp@data, -X)
 #Rshp@data<-Rshp@data[,c(-15,-29)] #remove date columns, was throwing errors later
@@ -278,9 +292,12 @@ Rshp <- merge(x=Admin2,y=Admin2data_current, by.x="admin2pcod", by.y= "district_
 
 DistsNumb<-sum(!is.na(Rshp@data$district_name)) #get number of districts covered...
 
-
 # Reduce shapfile complexity for fast leaflet loading,  AND project
-Rshp<-ms_simplify(Rshp, 0.5)
+#Keeps breaking on the ms_simplify cant get it to work at all, something about the data and columns not lining up
+#Rshp<-rgeos::gSimplify(Rshp,tol=0.5)
+#Rshp<-ms_simplify(Rshp, 0.5)
+
+
 Rshp <- spTransform(x = Rshp, 
                     CRSobj = "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0")
 Admin1<-ms_simplify(Admin1,0.5)
