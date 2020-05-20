@@ -2,11 +2,9 @@
 
 #install packages
 library(devtools)
+library(usethis)
 library(shiny)
 library(rgdal)
-library(googlesheets)
-library(googlesheets4)
-library(googledrive)
 library(dplyr)
 library(leaflet)
 library(highcharter)
@@ -21,12 +19,18 @@ library(sp)
 library(purrr)
 library(shinydashboard)
 library(rowr)
-library(gargle)
 library(readxl)
 library(DT)
 library(formattable)
 library(tibble)
 require(sp)
+library(reachR)
+library(V8)
+
+#library(googlesheets)
+#library(googlesheets4)
+#library(googledrive)
+#library(gargle)
 
 addLegend_decreasing <- function (map, position = c("topright", "bottomright", "bottomleft", 
                                                     "topleft"), pal, values, na.label = "NA", bins = 7, colors, 
@@ -167,7 +171,7 @@ round_df <- function(df, digits) {
 #get the authorizations from the google sheets
 #https://gargle.r-lib.org/articles/non-interactive-auth.html
 
-library(googledrive)
+
 
 # designate project-specific cache
 #options(gargle_oauth_cache = ".secrets")
@@ -239,6 +243,8 @@ Admin1table[4:14] <- sapply(Admin1table[4:14], as.numeric)
 #Districts
 Admin2table <- as.data.frame(Admin2data)
 #Admin2table$date2<- as.Date(Admin2table$date, format("%d-%b-%y"), tz="UTC")
+#Potential way around issues with dates as NA in May 2020
+#Admin2table$date2 <- (as.yearmon(Admin2table$date))
 Admin2table$date2 <- as.Date(as.yearmon(Admin2table$date))
 #Admin2table$date2 <- as.Date(x=paste("01-",Admin2table$date, sep=""), format="%d-%b-%y") #format a date column
 #Admin2table$date <- as.yearmon(Admin2table$date2)
@@ -248,6 +254,8 @@ Admin2data_current <- Admin2table %>% #subset only recent month dates to attach 
   filter(date2 == max(date2))
 currentD <- as.character(format(max(Admin2table$date2),"%B %Y")) #define current date for disply in dashboard
 Admin2table[7:16] <- sapply(Admin2table[7:16], as.numeric)
+
+#Admin2data_current$date <- lapply(Admin2data_current$date, as.character)
 
 #National
 AdminNatTable<-as.data.frame(AdminNatData)
@@ -259,7 +267,8 @@ AdminNatTable$date2 <- as.Date(as.yearmon(AdminNatTable$date))
 AdminNatData_current <- AdminNatTable %>% #subset only recent month dates to attach to shapefile
   arrange(desc(date2)) %>%
   filter(date2 == max(date2))
-currentD <- as.character(format(max(AdminNatTable$date2),"%B %Y")) #define current date for disply in dashboard
+currentD <- as.character(format(max(AdminNatTable$date2),"%B %Y"))
+  #define current date for disply in dashboard
 
 ###################
 #Build the min and max table
@@ -292,13 +301,19 @@ Rshp <- merge(x=Admin2,y=Admin2data_current, by.x="admin2pcod", by.y= "district_
 
 DistsNumb<-sum(!is.na(Rshp@data$district_name)) #get number of districts covered...
 
+#make sure all factors are characters.
+#for some reason the merge and then simplify keeps getting caught on the yearmon of the zoo package
+Rshp@data$date2 <- NA
+
+#Rshp@data$date<-as.integer(as.character(Rshp@data$date))
 # Reduce shapfile complexity for fast leaflet loading,  AND project
 #Keeps breaking on the ms_simplify cant get it to work at all, something about the data and columns not lining up
 #Rshp<-rgeos::gSimplify(Rshp,tol=0.5)
-Rshp<-ms_simplify(Rshp, 0.5)
+Rshp<-rmapshaper::ms_simplify(Rshp, 0.5)
 
+Rshp@data$date2<-as.Date(as.yearmon(Rshp@data$date))
 
-Rshp <- spTransform(x = Rshp, 
+Rshp <- sp::spTransform(x = Rshp, 
                     CRSobj = "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0")
 Admin1<-ms_simplify(Admin1,0.5)
 Admin1<- spTransform(x = Admin1, 
@@ -317,7 +332,7 @@ centroids <- data.frame("ID" = 1:nrow(centroids), centroids)
 
 # Create SpatialPointsDataFrame object
 coordinates(centroids) <- c("lon", "lat") 
-proj4string(centroids) <- proj4string(Admin1) # assign projection
+proj4string(centroids) <- sp::proj4string(Admin1) # assign projection
 centroids@data <- sp::over(x = centroids, y = Admin1, returnList = FALSE)
 centroids1 <- as.data.frame(centroid(Admin1))
 colnames(centroids1) <- c("lon", "lat")

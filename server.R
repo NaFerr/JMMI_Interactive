@@ -623,83 +623,86 @@ server<-function(input, output,session) {
 #build the dataset
 
   
-output$table_smeb<-DT::renderDataTable({
-#observe({
+  output$table_smeb<-DT::renderDataTable({
+    #observe({
     #https://stackoverflow.com/questions/50912519/select-the-number-of-rows-to-display-in-a-datatable-based-on-a-slider-input
-time<-input$months
-percent_time<- input$percent/100
-
-
-#time<-6
-national_data_test<-nat_data()
-#national_data_test<-AdminNatTable
-national_data$date2 <- as.yearmon(national_data_test$date)
-national_data<-arrange(national_data,desc(date2))
-
-month_all<-sort(unique(national_data$date2),decreasing = T)
-time_pull<-month_all[time]
-month_list<-month_all[1:match(time_pull,month_all)]
-
-#now have the month_list which we can cut from in the future
-
-national_data_pull<-dplyr::filter(national_data, date2==month_list)%>%
-  dplyr::select(-c(date,num_obs,exchange_rates))
-
-
-national_data_pull<-national_data_pull%>%
-  reshape2::melt("date2")%>%
-  reshape2::dcast(variable ~ date2)%>%
-  round_df(.,0)
-
-col_data_pull<-ncol(national_data_pull)
-
-name_perc_change<-paste0("Percentage change between ",
-                         colnames(national_data_pull[2]),
-                         " - ",
-                         colnames(national_data_pull[col_data_pull]))
-#Add SMEB base costs
-  #https://stackoverflow.com/questions/13502601/add-insert-a-column-between-two-columns-in-a-data-frame
-national_data_pull<-national_data_pull%>%
-  add_column(.,  `SMEB Base`= c(365,430,100,120,100,150,500,2000,12000), .after = 1)%>%
-  add_column(.,  `Variable`= c("Petrol","Diesel","Bottled water","Treated water","Soap","Laundry powder","Sanitary napkins","Water trucking","SMEB total"), .after = 1)%>%
-  dplyr::select(c(-1))
-
-#get number of columns now we will use later in the formatting of the table
-  columns_of_data_begin<-ncol(national_data_pull)+1
-
-#get the column number of the percent change for future formatting
-percent_col<-time+2
-col_format_last<-time+1
-
-
-
-#https://duckduckgo.com/?q=dynamic+naming+in+mutate+R&t=brave&ia=web
-national_data_pull<-national_data_pull%>%
-  dplyr::mutate_at(., .vars = c(3:ncol(.)),.funs = list(`Percent Change from Base`= ~((.-(national_data_pull[,2]))/(national_data_pull[,2]))                                                        ))
- 
-#get number of columns now we will use later in the formatting of the table 
-  columns_of_data_end<-ncol(national_data_pull)
-  
-#get rid of the weird naming from the mutate_at
-  names(national_data_pull) <- gsub("_", " ", names(national_data_pull))
-  
-#maybe keep for later
-  #dplyr::mutate(.,!!name_perc_change := (((.[,col_data_pull]-.[,2])/(.[,2]))))
-
-
-petrol_bench<-national_data_pull[2,2]*(1+percent_time)
-diesel_bench<-national_data_pull[3,2]*(1+percent_time)
-#Render the output DT
+    time<-input$months
+    percent_time<- input$percent/100
+    
+    
+    #time<-6
+    national_data_test<-nat_data()
+    national_data_test<-AdminNatTable
+    national_data_test$date2 <- as.yearmon(national_data_test$date)
+    national_data<-arrange(national_data_test,desc(date2))
+    
+    month_all<-sort(unique(national_data$date2),decreasing = T)
+    time_pull<-month_all[time]
+    month_list<-month_all[1:match(time_pull,month_all)]
+    
+    #now have the month_list which we can cut from in the future
+    
+    national_data_pull<-dplyr::filter(national_data, date2==month_list)%>%
+      dplyr::select(-c(date,num_obs,exchange_rates))
+    
+    
+    national_data_pull<-national_data_pull%>%
+      reshape2::melt("date2")%>%
+      reshape2::dcast(variable ~ date2)%>%
+      round_df(.,0)
+    
+    col_data_pull<-ncol(national_data_pull)
+    
+    name_perc_change<-paste0("Percentage change between ",
+                             colnames(national_data_pull[2]),
+                             " - ",
+                             colnames(national_data_pull[col_data_pull]))
+    #Add SMEB base costs
+    #https://stackoverflow.com/questions/13502601/add-insert-a-column-between-two-columns-in-a-data-frame
+    national_data_pull<-national_data_pull%>%
+      add_column(.,  `SMEB Base`= c(365,430,100,120,100,150,500,2000,12000), .after = 1)%>%
+      add_column(.,  `Variable`= c("Petrol","Diesel","Bottled water","Treated water","Soap","Laundry powder","Sanitary napkins","Water trucking","SMEB total"), .after = 1)%>%
+      dplyr::select(c(-1))
+    
+    #get number of columns now we will use later in the formatting of the table
+    columns_of_data_begin<-ncol(national_data_pull)+1
+    
+    #get the column number of the percent change for future formatting
+    percent_col<-time+2
+    col_format_last<-time+1
+    
+    
+    
+    #https://duckduckgo.com/?q=dynamic+naming+in+mutate+R&t=brave&ia=web
+    national_data_pull<-national_data_pull%>%
+      dplyr::mutate_at(., .vars = c(3:ncol(.)),.funs = list(`Percent Change from Base`= ~((.-(national_data_pull[,2]))/(national_data_pull[,2]))                                                        ))
+    
+    #get number of columns now we will use later in the formatting of the table 
+    columns_of_data_end<-ncol(national_data_pull)
+    
+    #get rid of the weird naming from the mutate_at
+    names(national_data_pull) <- gsub("_", " ", names(national_data_pull))
+    
+    #maybe keep for later
+    #dplyr::mutate(.,!!name_perc_change := (((.[,col_data_pull]-.[,2])/(.[,2]))))
+    
+    
+    petrol_bench<-national_data_pull[2,2]*(1+percent_time)
+    diesel_bench<-national_data_pull[3,2]*(1+percent_time)
+    #Render the output DT
     #https://stackoverflow.com/questions/60659666/changing-color-for-cells-on-dt-table-in-shiny
     #https://blog.rstudio.com/2015/06/24/dt-an-r-interface-to-the-datatables-library/
-DT::datatable(national_data_pull, options = list(searching = F, paging = F, scrollX=T))%>%
-  DT::formatPercentage(columns = c(columns_of_data_begin:columns_of_data_end),2)%>%
-  formatStyle(columns = c(columns_of_data_begin:columns_of_data_end),
-      color = styleInterval(c(-percent_time,percent_time), c('white', 'black','white')),
-      backgroundColor = styleInterval(c(-percent_time,percent_time), c('red', 'white','red')),
-      fontWeight = styleInterval(c(-percent_time,percent_time),c('bold','normal','bold')))
-  
-
+    DT::datatable(national_data_pull,extensions = c('FixedColumns'), 
+                  options = list(searching = F, paging = F, scrollX=T, fixedColumns = list(leftColumns = 2, rightColumns = 0)),
+                  rownames = F)%>%
+      formatStyle(columns = 2, color = "white", backgroundColor = "grey", fontWeight = "bold")%>%
+      DT::formatPercentage(columns = c(columns_of_data_begin:columns_of_data_end),2)%>%
+      formatStyle(columns = c(columns_of_data_begin:columns_of_data_end),
+                  color = styleInterval(c(-percent_time,percent_time), c('grey', 'black','grey')),
+                  backgroundColor = styleInterval(c(-percent_time,percent_time), c('#66FF66', 'white','#FA5353')),
+                  fontWeight = styleInterval(c(-percent_time,percent_time),c('bold','normal','bold')))
+    
+    
   })
   
 

@@ -1,0 +1,12 @@
+name: JMMI_TEST_NO_PUBLSIH
+title: JMMI_TEST_NO_PUBLSIH
+username:
+account: reach-info
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 2331159
+bundleId: 3171022
+url: https://reach-info.shinyapps.io/JMMI_TEST_NO_PUBLSIH/
+when: 1589989761.34725
+asMultiple: FALSE
+asStatic: FALSE
