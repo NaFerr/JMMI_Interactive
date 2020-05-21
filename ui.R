@@ -206,8 +206,8 @@ navbarPage(theme= shinytheme("journal"),
                         width=3),
                       
                       mainPanel(
-                        h2("SMEB costs by month and proposed percent change")
-                        #DT::dataTableOutput("table_smeb")
+                        h2("SMEB costs by month and proposed percent change"),
+                       DT::dataTableOutput("table_smeb")
                         #DT::dataTableOutput("mytable")
                         
                         
