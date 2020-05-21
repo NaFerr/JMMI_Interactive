@@ -18,14 +18,16 @@ library(ggplot2)
 library(sp)
 library(purrr)
 library(shinydashboard)
-library(rowr)
+#library(rowr)
 library(readxl)
 library(DT)
 library(formattable)
 library(tibble)
 require(sp)
-library(reachR)
-library(V8)
+library(sf)
+
+
+
 
 #library(googlesheets)
 #library(googlesheets4)
@@ -167,7 +169,7 @@ round_df <- function(df, digits) {
 #drive_auth(email = T)
 #sheets_auth(email = gargle_oauth_email())
 #token<-list.files(".secrets/")
- 
+
 #get the authorizations from the google sheets
 #https://gargle.r-lib.org/articles/non-interactive-auth.html
 
@@ -201,11 +203,11 @@ GSh<-read.csv("data/governorate_interactive.csv")%>%
   as_tibble()%>%
   dplyr::select(-X)
 #GSh[4:13]<-as.numeric(GSh[4:13])
-  #GSh[4:12]<-as_tibble(as.numeric(as.character(unlist(GSh[4:12]))))#Governorates
-  Admin1data <- mutate(GSh, SMEB = as.numeric((soap*10.5+laundry_powder*20+sanitary_napkins*2+as.numeric(cost_cubic_meter)*3.15))) #The SMEB calculation
-  Admin1data$SMEB<-round(Admin1data$SMEB,0)
-  
-  
+#GSh[4:12]<-as_tibble(as.numeric(as.character(unlist(GSh[4:12]))))#Governorates
+Admin1data <- mutate(GSh, SMEB = as.numeric((soap*10.5+laundry_powder*20+sanitary_napkins*2+as.numeric(cost_cubic_meter)*3.15))) #The SMEB calculation
+Admin1data$SMEB<-round(Admin1data$SMEB,0)
+
+
 #GSh2<- read_sheet('https://docs.google.com/spreadsheets/d/1NnQNwo3FnEyayGwUk-TUeSRxV04CkiqsDuTePpbYpWs/edit#gid=0')%>% #Districts
 #GSh2<-read_excel("data/updated_interactive.xlsx",sheet = 1)%>%
 GSh2<-read.csv("data/district_interactive.csv")%>%
@@ -213,19 +215,19 @@ GSh2<-read.csv("data/district_interactive.csv")%>%
   dplyr::select(-X)
 #GSh2[6:15]<-as.numeric(GSh2[6:15])
 #  GSh2[6:14]<-as_tibble(as.numeric(as.character(unlist(GSh2[6:14])))) #first worksheet
-  Admin2data <- mutate(GSh2, SMEB = as.numeric((soap*10.5+laundry_powder*20+sanitary_napkins*2+as.numeric(cost_cubic_meter)*3.15))) #The SMEB caluclation
-  Admin2data$SMEB<-round(Admin2data$SMEB,0)
-  
+Admin2data <- mutate(GSh2, SMEB = as.numeric((soap*10.5+laundry_powder*20+sanitary_napkins*2+as.numeric(cost_cubic_meter)*3.15))) #The SMEB caluclation
+Admin2data$SMEB<-round(Admin2data$SMEB,0)
+
 #GShnat<-read_sheet('https://docs.google.com/spreadsheets/d/1k4CUjmjXRSRh6bm-JC8IaAAo5fuGIM-8_IzQC8hZF6c/edit#gid=0')%>%#National
 #GShnat<-read_excel("data/updated_interactive.xlsx",sheet = 3)%>%
 GShnat<-read.csv("data/national_interactive.csv")%>%
   as_tibble()%>%
   dplyr::select(-X)
 #GShnat[2:11]<-as.numeric(GShnat[2:11])
- # GShnat[2:10]<-as_tibble(as.numeric(as.character(unlist(GShnat[2:10])))) #first worksheet
-  AdminNatData<-mutate(GShnat,SMEB = as.numeric((soap*10.5+laundry_powder*20+sanitary_napkins*2+as.numeric(cost_cubic_meter)*3.15))) #The SMEB caluclation)
-  AdminNatData$SMEB<-round(AdminNatData$SMEB,0)
-  
+# GShnat[2:10]<-as_tibble(as.numeric(as.character(unlist(GShnat[2:10])))) #first worksheet
+AdminNatData<-mutate(GShnat,SMEB = as.numeric((soap*10.5+laundry_powder*20+sanitary_napkins*2+as.numeric(cost_cubic_meter)*3.15))) #The SMEB caluclation)
+AdminNatData$SMEB<-round(AdminNatData$SMEB,0)
+
 #Wrangle Data into appropriate formats
 #Governorates
 Admin1table<-as.data.frame(Admin1data)
@@ -268,7 +270,7 @@ AdminNatData_current <- AdminNatTable %>% #subset only recent month dates to att
   arrange(desc(date2)) %>%
   filter(date2 == max(date2))
 currentD <- as.character(format(max(AdminNatTable$date2),"%B %Y"))
-  #define current date for disply in dashboard
+#define current date for disply in dashboard
 
 ###################
 #Build the min and max table
@@ -303,21 +305,24 @@ DistsNumb<-sum(!is.na(Rshp@data$district_name)) #get number of districts covered
 
 #make sure all factors are characters.
 #for some reason the merge and then simplify keeps getting caught on the yearmon of the zoo package
-Rshp@data$date2 <- NA
+#rownames(Rshp@data)<-as.character(as.integer(rownames(Rshp@data))-1)
 
 #Rshp@data$date<-as.integer(as.character(Rshp@data$date))
 # Reduce shapfile complexity for fast leaflet loading,  AND project
 #Keeps breaking on the ms_simplify cant get it to work at all, something about the data and columns not lining up
 #Rshp<-rgeos::gSimplify(Rshp,tol=0.5)
-Rshp<-rmapshaper::ms_simplify(Rshp, 0.5)
 
-Rshp@data$date2<-as.Date(as.yearmon(Rshp@data$date))
+#Rshp@data$date2<-as.Date(as.yearmon(Rshp@data$date))
 
-Rshp <- sp::spTransform(x = Rshp, 
-                    CRSobj = "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0")
-Admin1<-ms_simplify(Admin1,0.5)
-Admin1<- spTransform(x = Admin1, 
-                     CRSobj = "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0")
+Rshp<-st_simplify(st_as_sf(Rshp), dTolerance = 0.5)
+Rshp <- st_transform(x = Rshp, 
+                        crs = "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0")
+Rshp<-as(Rshp,"Spatial")
+
+Admin1<-st_simplify(st_as_sf(Admin1), dTolerance = 0.5)
+Admin1<- st_transform(x = Admin1, 
+                     crs = "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0")
+Admin1<-as(Admin1,"Spatial")
 
 lopt = labelOptions(noHide = TRUE,
                     direction = 'top',
@@ -411,9 +416,4 @@ vars <- c(
   "Sanitary Napkins"="sanitary_napkins",
   "Water Trucking"= "cost_cubic_meter"
 )
-
-
-
-
-
 

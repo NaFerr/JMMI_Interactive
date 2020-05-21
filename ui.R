@@ -189,7 +189,35 @@ navbarPage(theme= shinytheme("journal"),
                                  a(img(src='reach_logoInforming.jpg', width= "200px"), target="_blank", href="http://www.reach-initiative.org")))
                     ),
            
-           
+           tabPanel(strong("SMEB Tracker"),
+                    
+                    
+                    style=("{overflow-y:auto; }"), 
+                    icon= icon("bar-chart"), #info-circle
+                    div(tags$head(
+                      # Include our custom CSS
+                      tags$style(".fa-check {color:#008000}"),
+                      tags$style(HTML(".sidebar {height:50vh; overflow-y:auto; }"))
+                    ),
+                    sidebarLayout(
+                      sidebarPanel(
+                        sliderInput("months","Number of months to measure", min = 1, max = 24, step = 1,value = 6, ticks = F),
+                        sliderInput("percent","Percentage benchmark", min = 1, max = 100, value = 20, tick=F),
+                        width=3),
+                      
+                      mainPanel(
+                        h2("SMEB costs by month and proposed percent change")
+                        #DT::dataTableOutput("table_smeb")
+                        #DT::dataTableOutput("mytable")
+                        
+                        
+                      )
+                    )
+                    
+                    
+                    
+                    
+                    )),           
            #conditionalPanel("false", icon("crosshairs")),
 #)
 
@@ -236,34 +264,6 @@ tabPanel(strong("Partners"),
              hr()
 
              
-)),
-tabPanel(strong("SMEB Tracker"),
-         
-       
-         style=("{overflow-y:auto; }"), 
-         icon= icon("bar-chart"), #info-circle
-         div(tags$head(
-         # Include our custom CSS
-          tags$style(".fa-check {color:#008000}"),
-         tags$style(HTML(".sidebar {height:50vh; overflow-y:auto; }"))
-         ),
-         sidebarLayout(
-          sidebarPanel(
-                      sliderInput("months","Number of months to measure", min = 1, max = 24, step = 1,value = 6, ticks = F),
-                      sliderInput("percent","Percentage benchmark", min = 1, max = 100, value = 20, tick=F),
-                      width=3),
-        
-            mainPanel(
-              h2("SMEB costs by month and proposed percent change"),
-             DT::dataTableOutput("table_smeb")
-             #DT::dataTableOutput("mytable")
-      
-               
-           )
-            )
-         
-         
-         
-         
-         ))
+))
+
 )

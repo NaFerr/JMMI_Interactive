@@ -5,8 +5,8 @@ account: naferr
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 2330547
-bundleId: 3171676
+bundleId: 3174579
 url: https://naferr.shinyapps.io/JMMI_Interactive_test/
-when: 1590000728.25619
+when: 1590062651.3375
 asMultiple: FALSE
 asStatic: FALSE
