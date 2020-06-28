@@ -4,29 +4,27 @@
 library(devtools)
 library(usethis)
 library(shiny)
+library(shinyjs)
 library(rgdal)
 library(dplyr)
 library(leaflet)
 library(highcharter)
 library(zoo)
 library(ggplot2)
-library(rmapshaper)
+library(rgeos)
 library(classInt)
 library(geosphere)
 library(shinythemes)
 library(ggplot2)
-library(sp)
+library(sf)
 library(purrr)
 library(shinydashboard)
-#library(rowr)
 library(readxl)
 library(DT)
 library(formattable)
 library(tibble)
-require(sp)
-library(sf)
-
-
+library(curl)
+library(sp)
 
 
 #library(googlesheets)
@@ -169,7 +167,7 @@ round_df <- function(df, digits) {
 #drive_auth(email = T)
 #sheets_auth(email = gargle_oauth_email())
 #token<-list.files(".secrets/")
-
+ 
 #get the authorizations from the google sheets
 #https://gargle.r-lib.org/articles/non-interactive-auth.html
 
@@ -203,11 +201,11 @@ GSh<-read.csv("data/governorate_interactive.csv")%>%
   as_tibble()%>%
   dplyr::select(-X)
 #GSh[4:13]<-as.numeric(GSh[4:13])
-#GSh[4:12]<-as_tibble(as.numeric(as.character(unlist(GSh[4:12]))))#Governorates
-Admin1data <- mutate(GSh, SMEB = as.numeric((soap*10.5+laundry_powder*20+sanitary_napkins*2+as.numeric(cost_cubic_meter)*3.15))) #The SMEB calculation
-Admin1data$SMEB<-round(Admin1data$SMEB,0)
-
-
+  #GSh[4:12]<-as_tibble(as.numeric(as.character(unlist(GSh[4:12]))))#Governorates
+  Admin1data <- mutate(GSh, SMEB = as.numeric((soap*10.5+laundry_powder*20+sanitary_napkins*2+as.numeric(cost_cubic_meter)*3.15))) #The SMEB calculation
+  Admin1data$SMEB<-round(Admin1data$SMEB,0)
+  
+  
 #GSh2<- read_sheet('https://docs.google.com/spreadsheets/d/1NnQNwo3FnEyayGwUk-TUeSRxV04CkiqsDuTePpbYpWs/edit#gid=0')%>% #Districts
 #GSh2<-read_excel("data/updated_interactive.xlsx",sheet = 1)%>%
 GSh2<-read.csv("data/district_interactive.csv")%>%
@@ -215,18 +213,20 @@ GSh2<-read.csv("data/district_interactive.csv")%>%
   dplyr::select(-X)
 #GSh2[6:15]<-as.numeric(GSh2[6:15])
 #  GSh2[6:14]<-as_tibble(as.numeric(as.character(unlist(GSh2[6:14])))) #first worksheet
-Admin2data <- mutate(GSh2, SMEB = as.numeric((soap*10.5+laundry_powder*20+sanitary_napkins*2+as.numeric(cost_cubic_meter)*3.15))) #The SMEB caluclation
-Admin2data$SMEB<-round(Admin2data$SMEB,0)
-
+  Admin2data <- mutate(GSh2, SMEB = as.numeric((soap*10.5+laundry_powder*20+sanitary_napkins*2+as.numeric(cost_cubic_meter)*3.15))) #The SMEB caluclation
+  Admin2data$SMEB<-round(Admin2data$SMEB,0)
+  
 #GShnat<-read_sheet('https://docs.google.com/spreadsheets/d/1k4CUjmjXRSRh6bm-JC8IaAAo5fuGIM-8_IzQC8hZF6c/edit#gid=0')%>%#National
 #GShnat<-read_excel("data/updated_interactive.xlsx",sheet = 3)%>%
 GShnat<-read.csv("data/national_interactive.csv")%>%
   as_tibble()%>%
   dplyr::select(-X)
 #GShnat[2:11]<-as.numeric(GShnat[2:11])
-# GShnat[2:10]<-as_tibble(as.numeric(as.character(unlist(GShnat[2:10])))) #first worksheet
-AdminNatData<-mutate(GShnat,SMEB = as.numeric((soap*10.5+laundry_powder*20+sanitary_napkins*2+as.numeric(cost_cubic_meter)*3.15))) #The SMEB caluclation)
-AdminNatData$SMEB<-round(AdminNatData$SMEB,0)
+ # GShnat[2:10]<-as_tibble(as.numeric(as.character(unlist(GShnat[2:10])))) #first worksheet
+  AdminNatData<-mutate(GShnat,SMEB = as.numeric((soap*10.5+laundry_powder*20+sanitary_napkins*2+as.numeric(cost_cubic_meter)*3.15))) #The SMEB caluclation)
+  AdminNatData$SMEB<-round(AdminNatData$SMEB,0)
+  
+max_date <- max(as.Date(as.yearmon(AdminNatData$date)))  
 
 #Wrangle Data into appropriate formats
 #Governorates
@@ -238,7 +238,7 @@ Admin1table$date2 <- as.Date(as.yearmon(Admin1table$date))
 
 Admin1data_current <- Admin1table %>% #subset only recent month dates to attach to shapefile
   arrange(desc(date2)) %>%
-  filter(date2 == max(date2))
+  filter(date2 == max_date)
 currentD <- as.character(format(max(Admin1table$date2),"%B %Y")) #define current date for disply in dashboard
 Admin1table[4:14] <- sapply(Admin1table[4:14], as.numeric)
 
@@ -252,8 +252,8 @@ Admin2table$date2 <- as.Date(as.yearmon(Admin2table$date))
 #Admin2table$date <- as.yearmon(Admin2table$date2)
 
 Admin2data_current <- Admin2table %>% #subset only recent month dates to attach to shapefile
-  arrange(desc(date2)) %>%
-  filter(date2 == max(date2))
+  arrange(desc(date2))%>%
+  filter(date2 == max_date)
 currentD <- as.character(format(max(Admin2table$date2),"%B %Y")) #define current date for disply in dashboard
 Admin2table[7:16] <- sapply(Admin2table[7:16], as.numeric)
 
@@ -268,9 +268,9 @@ AdminNatTable$date2 <- as.Date(as.yearmon(AdminNatTable$date))
 
 AdminNatData_current <- AdminNatTable %>% #subset only recent month dates to attach to shapefile
   arrange(desc(date2)) %>%
-  filter(date2 == max(date2))
+  filter(date2 == max_date)
 currentD <- as.character(format(max(AdminNatTable$date2),"%B %Y"))
-#define current date for disply in dashboard
+  #define current date for disply in dashboard
 
 ###################
 #Build the min and max table
@@ -304,29 +304,20 @@ Rshp <- merge(x=Admin2,y=Admin2data_current, by.x="admin2pcod", by.y= "district_
 DistsNumb<-sum(!is.na(Rshp@data$district_name)) #get number of districts covered...
 
 #make sure all factors are characters.
-#for some reason the merge and then simplify keeps getting caught on the yearmon of the zoo package
-#rownames(Rshp@data)<-as.character(as.integer(rownames(Rshp@data))-1)
 
 #Rshp@data$date<-as.integer(as.character(Rshp@data$date))
 # Reduce shapfile complexity for fast leaflet loading,  AND project
-#Keeps breaking on the ms_simplify cant get it to work at all, something about the data and columns not lining up
-#Rshp<-rgeos::gSimplify(Rshp,tol=0.5)
-
-#Rshp@data$date2<-as.Date(as.yearmon(Rshp@data$date))
 
 Rshp<-st_simplify(st_as_sf(Rshp), dTolerance = 0.5)
 Rshp <- st_transform(x = Rshp, 
-                        crs = "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0")
+                     crs = "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0")
 Rshp<-as(Rshp,"Spatial")
+
 
 Admin1<-st_simplify(st_as_sf(Admin1), dTolerance = 0.5)
 Admin1<- st_transform(x = Admin1, 
-                     crs = "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0")
+                      crs = "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0")
 Admin1<-as(Admin1,"Spatial")
-
-lopt = labelOptions(noHide = TRUE,
-                    direction = 'top',
-                    textOnly = TRUE)
 
 ##-------------------------- CREATE MAP LABELS ----------------------
 #GOVERNORATE LABELS
@@ -416,4 +407,9 @@ vars <- c(
   "Sanitary Napkins"="sanitary_napkins",
   "Water Trucking"= "cost_cubic_meter"
 )
+
+
+
+
+
 

@@ -17,3 +17,7 @@
   all_dat
 
   
+  r<-all_dat[,c(1:5,16,17,31,43,15,30,42)]
+  colnames(r)<-c("date","government_name","government_ID","district_name","district_ID","variableSEL","date2","governorate_val","nat_val","dist_obs","gov_obs","nat_obs")
+r  
+  

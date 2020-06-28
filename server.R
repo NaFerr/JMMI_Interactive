@@ -357,75 +357,7 @@ server<-function(input, output,session) {
     r
   })
 
-  if(FALSE){
-  chartDatMIN<-reactive({  #subset JMMI data table based on variable of interest (soap, water etc)
-    if (input$variable1 == "SMEB"){
-      min<-min_max_out[2,10]
-    }
-    if (input$variable1 == "exchange_rates"){
-      min<-min_max_out[2,9]
-    }
-    if (input$variable1 == "petrol"){
-      min<-min_max_out[2,1]
-    }
-    if (input$variable1 == "diesel"){
-      min<-min_max_out[2,2]
-    }
-    if (input$variable1 == "bottled_water"){
-      min<-min_max_out[2,3]
-    }
-    if (input$variable1 == "treated_water"){
-      min<-min_max_out[2,4]
-    }
-    if (input$variable1 == "soap"){
-      min<-min_max_out[2,5]
-    }
-    if (input$variable1 == "laundry_powder"){
-      min<-min_max_out[2,6]
-    }
-    if (input$variable1 == "sanitary_napkins"){
-      min<-min_max_out[2,7]
-    }
-    if (input$variable1 == "cost_cubic_meter"){
-      min<-min_max_out[2,8]
-    }
-    min
-  })  
   
-  chartDatMAX<-reactive({  #subset JMMI data table based on variable of interest (soap, water etc)
-    if (input$variable1 == "SMEB"){
-      max<-min_max_out[1,10]
-    }
-    if (input$variable1 == "exchange_rates"){
-      max<-min_max_out[1,9]
-    }
-    if (input$variable1 == "petrol"){
-      max<-min_max_out[1,1]
-    }
-    if (input$variable1 == "diesel"){
-      max<-min_max_out[1,2]
-    }
-    if (input$variable1 == "bottled_water"){
-      max<-min_max_out[1,3]
-    }
-    if (input$variable1 == "treated_water"){
-      max<-min_max_out[1,4]
-    } 
-    if (input$variable1 == "soap"){
-      max<-min_max_out[1,5]
-    }
-    if (input$variable1 == "laundry_powder"){
-      max<-min_max_out[1,6]
-    }
-    if (input$variable1 == "sanitary_napkins"){
-      max<-min_max_out[1,7]
-    }
-    if (input$variable1 == "cost_cubic_meter"){
-      max<-min_max_out[1,8]
-    }
-    max
-  })  
-  }
   
   chartNAME<-reactive({ #define element to be used as title for selected variable
     if (input$variable1 == "SMEB"){
@@ -479,7 +411,7 @@ server<-function(input, output,session) {
   #https://stackoverflow.com/questions/57468457/how-can-i-set-the-yaxis-limits-within-highchart-plot
   
   observe({
-    updateSelectInput(session = session, inputId = "varDateSelect", choices = chartData1()$date,selected=lapply(reactiveValuesToList(input), unclass)$varDateSelect)
+    updateSelectInput(session = session, inputId = "varDateSelect", choices = chartData1()$date, selected=lapply(reactiveValuesToList(input), unclass)$varDateSelect)
   })
   
   output$hcontainer <- renderHighchart({
@@ -588,22 +520,7 @@ server<-function(input, output,session) {
          font-family: Helvetica} </style>')
   })
   
-  output$mytable = DT::renderDataTable({
-  m_df<- mtcars%>% 
-     formatStyle(columns = `mpg`,
-                 color = styleInterval(17, (c('black','white'))),
-                 backgroundColor = styleInterval(17, (c('white','red'))))
-   
-  
-    #return(as.datatable(formattable(my_df, lapply(1:4, function(col){area(col = col) ~ color_tile("red", "green")}))))
-   
-  })
-  #formattable(mtcars, align = c("l",rep("r", NCOL(mtcars) - 1)), 
-   #           list(`mpg` = formatter("span", style = ~ style(color = "grey",font.weight = "bold")), 
-    #               area(col = 2:4) ~ function(x) percent(x / 100, digits = 0),
-     #              area(col = 2:3) ~ color_tile("#DeF7E9", "#71CA97")))%>%
- 
-  #
+
   
 
   
@@ -622,7 +539,7 @@ server<-function(input, output,session) {
 
 #build the dataset
 
-  
+#SMEB DATASET  
   output$table_smeb<-DT::renderDataTable({
     #observe({
     #https://stackoverflow.com/questions/50912519/select-the-number-of-rows-to-display-in-a-datatable-based-on-a-slider-input
@@ -653,16 +570,16 @@ server<-function(input, output,session) {
     
     col_data_pull<-ncol(national_data_pull)
     
-    name_perc_change<-paste0("Percentage change between ",
-                             colnames(national_data_pull[2]),
-                             " - ",
-                             colnames(national_data_pull[col_data_pull]))
+    name_perc_change<-paste0(colnames(national_data_pull[col_data_pull]),
+                             " percent change from standard SMEB"
+                             )
     #Add SMEB base costs
     #https://stackoverflow.com/questions/13502601/add-insert-a-column-between-two-columns-in-a-data-frame
     national_data_pull<-national_data_pull%>%
-      add_column(.,  `SMEB Base`= c(365,430,100,120,100,150,500,2000,12000), .after = 1)%>%
+      add_column(.,  `Standard SMEB Values`= c(365,430,100,120,130,105,525,1825,12000), .after = 1)%>%
       add_column(.,  `Variable`= c("Petrol","Diesel","Bottled water","Treated water","Soap","Laundry powder","Sanitary napkins","Water trucking","SMEB total"), .after = 1)%>%
-      dplyr::select(c(-1))
+      dplyr::select(c(-1))%>%
+      dplyr::filter(Variable %in% c("Soap","Laundry powder","Sanitary napkins","Water trucking","SMEB total"))
     
     #get number of columns now we will use later in the formatting of the table
     columns_of_data_begin<-ncol(national_data_pull)+1
@@ -675,7 +592,7 @@ server<-function(input, output,session) {
     
     #https://duckduckgo.com/?q=dynamic+naming+in+mutate+R&t=brave&ia=web
     national_data_pull<-national_data_pull%>%
-      dplyr::mutate_at(., .vars = c(3:ncol(.)),.funs = list(`Percent Change from Base`= ~((.-(national_data_pull[,2]))/(national_data_pull[,2]))                                                        ))
+      dplyr::mutate_at(., .vars = c(3:ncol(.)),.funs = list(`percent change from standard SMEB`= ~((.-(national_data_pull[,2]))/(national_data_pull[,2]))                                                        ))
     
     #get number of columns now we will use later in the formatting of the table 
     columns_of_data_end<-ncol(national_data_pull)
@@ -686,9 +603,6 @@ server<-function(input, output,session) {
     #maybe keep for later
     #dplyr::mutate(.,!!name_perc_change := (((.[,col_data_pull]-.[,2])/(.[,2]))))
     
-    
-    petrol_bench<-national_data_pull[2,2]*(1+percent_time)
-    diesel_bench<-national_data_pull[3,2]*(1+percent_time)
     #Render the output DT
     #https://stackoverflow.com/questions/60659666/changing-color-for-cells-on-dt-table-in-shiny
     #https://blog.rstudio.com/2015/06/24/dt-an-r-interface-to-the-datatables-library/
@@ -698,14 +612,82 @@ server<-function(input, output,session) {
       formatStyle(columns = 2, color = "white", backgroundColor = "grey", fontWeight = "bold")%>%
       DT::formatPercentage(columns = c(columns_of_data_begin:columns_of_data_end),2)%>%
       formatStyle(columns = c(columns_of_data_begin:columns_of_data_end),
-                  color = styleInterval(c(-percent_time,percent_time), c('grey', 'black','grey')),
+                  color = styleInterval(c(-percent_time,percent_time), c('grey', 'black','white')),
                   backgroundColor = styleInterval(c(-percent_time,percent_time), c('#66FF66', 'white','#FA5353')),
                   fontWeight = styleInterval(c(-percent_time,percent_time),c('bold','normal','bold')))
     
     
   })
   
-
+  
+  #Other goods dataset  
+  output$table_other<-DT::renderDataTable({
+    #observe({
+    #https://stackoverflow.com/questions/50912519/select-the-number-of-rows-to-display-in-a-datatable-based-on-a-slider-input
+    time<-input$months
+    percent_time<- input$percent/100
+    
+    
+    #time<-6
+    national_data_test<-nat_data()
+    national_data_test<-AdminNatTable
+    national_data_test$date2 <- as.yearmon(national_data_test$date)
+    national_data<-arrange(national_data_test,desc(date2))
+    
+    month_all<-sort(unique(national_data$date2),decreasing = T)
+    time_pull<-month_all[time]
+    month_list<-month_all[1:match(time_pull,month_all)]
+    
+    #now have the month_list which we can cut from in the future
+    
+    national_data_pull<-dplyr::filter(national_data, date2==month_list)%>%
+      dplyr::select(-c(date,num_obs,exchange_rates))
+    
+    
+    national_data_pull<-national_data_pull%>%
+      reshape2::melt("date2")%>%
+      reshape2::dcast(variable ~ date2)%>%
+      round_df(.,0)
+    
+    col_data_pull<-ncol(national_data_pull)
+    
+    name_perc_change<-paste0(colnames(national_data_pull[col_data_pull]),
+                             " percent change from standard SMEB"
+    )
+    #Add SMEB base costs
+    #https://stackoverflow.com/questions/13502601/add-insert-a-column-between-two-columns-in-a-data-frame
+    national_data_pull<-national_data_pull%>%
+      #add_column(.,  `Standard SMEB Values`= c(365,430,100,120,130,105,525,1825,12000), .after = 1)%>%
+      add_column(.,  `Variable`= c("Petrol","Diesel","Bottled water","Treated water","Soap","Laundry powder","Sanitary napkins","Water trucking","SMEB total"), .after = 1)%>%
+      dplyr::select(c(-1))%>%
+      dplyr::filter(Variable %in% c("Petrol","Diesel","Bottled water","Treated water"))
+    
+    #get number of columns now we will use later in the formatting of the table
+    columns_of_data_begin<-ncol(national_data_pull)+1
+    
+    #get the column number of the percent change for future formatting
+    percent_col<-time+2
+    col_format_last<-time+1
+    
+  
+   
+    #get number of columns now we will use later in the formatting of the table 
+    columns_of_data_end<-ncol(national_data_pull)
+    
+    #get rid of the weird naming from the mutate_at
+    names(national_data_pull) <- gsub("_", " ", names(national_data_pull))
+    
+    #maybe keep for later
+    #dplyr::mutate(.,!!name_perc_change := (((.[,col_data_pull]-.[,2])/(.[,2]))))
+    
+    #Render the output DT
+    #https://stackoverflow.com/questions/60659666/changing-color-for-cells-on-dt-table-in-shiny
+    #https://blog.rstudio.com/2015/06/24/dt-an-r-interface-to-the-datatables-library/
+    DT::datatable(national_data_pull,extensions = c('FixedColumns'), 
+                  options = list(searching = F, paging = F, scrollX=T, fixedColumns = list(leftColumns = 1, rightColumns = 0)),
+                  rownames = F)
+    
+  })
   
   
 }

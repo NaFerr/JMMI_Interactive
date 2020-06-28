@@ -86,7 +86,7 @@ navbarPage(theme= shinytheme("journal"),
                                       
                                       #new data table 
                                       hr(),
-                                      selectInput(inputId= "varDateSelect", label = h4("Select Month of Data Collection"), choices=NULL, selected = (("varsDateSelect"))),#linked date stuff
+                                      selectInput(inputId= "varDateSelect", label = h4("Select Month of Data Collection"), choices=NULL, selected = (("varDateSelect"))),#linked date stuff
                                       h5("Please select a district to enable month selection"),
                                       h5(textOutput("text_DT")),
                                       DT::dataTableOutput("out_table_obs",height = "auto", width = "100%"),
@@ -192,32 +192,38 @@ navbarPage(theme= shinytheme("journal"),
            tabPanel(strong("SMEB Tracker"),
                     
                     
-                    style=("{overflow-y:auto; }"), 
-                    icon= icon("bar-chart"), #info-circle
-                    div(tags$head(
-                      # Include our custom CSS
+                   style=("{overflow-y:auto; }"), 
+                   icon= icon("bar-chart"), #info-circle
+                   div(tags$head(
+                     # Include our custom CSS
                       tags$style(".fa-check {color:#008000}"),
                       tags$style(HTML(".sidebar {height:50vh; overflow-y:auto; }"))
                     ),
                     sidebarLayout(
                       sidebarPanel(
-                        sliderInput("months","Number of months to measure", min = 1, max = 24, step = 1,value = 6, ticks = F),
-                        sliderInput("percent","Percentage benchmark", min = 1, max = 100, value = 20, tick=F),
-                        width=3),
+                        sliderInput("months","Number of months displayed", min = 1, max = 24, step = 1,value = 6, ticks = F),
+                        h6("Displays the number of months from the most recent dataset"),
+                        br(),
+                        br(),
+                        sliderInput("percent","Percentage change highlighted", min = 1, max = 100, value = 20, tick=F),
+                        h6("Is the percent difference desired for the benchmark"),
+                        width=2.5),
                       
                       mainPanel(
-                        h2("SMEB costs by month and proposed percent change"),
-                       DT::dataTableOutput("table_smeb")
-                        #DT::dataTableOutput("mytable")
-                        
-                        
+                        h2("Monthly SMEB Costs and Percentage Change from Standard SMEB Values"),
+                       DT::dataTableOutput("table_smeb"),
+                       tags$hr(),
+                       h2("Monthly Cost for Other non-SMEB goods"),
+                        DT::dataTableOutput("table_other")
+                       
+                       
                       )
                     )
                     
                     
                     
                     
-                    )),           
+                   )),           
            #conditionalPanel("false", icon("crosshairs")),
 #)
 
@@ -254,7 +260,7 @@ tabPanel(strong("Partners"),
              column(width=12,align = "center", h5("Sama Al Yemen", icon("check", "fa-2x")), img(src='0_sama.jpg', height= "50px")),
              column(width=12,align = "center", h5("Save the Children (SCI)",icon("check", "fa-2x")), img(src='0_sci.png', height= "50px")),
              column(width=12,align = "center", h5("Sustainable Development Foundation (SDF)"), img(src='0_sdf.jpg', height= "50px")),
-             column(width=12,align = "center", h5("Solidarites International (SI)", icon("check", "fa-2x")), img(src='0_si.jpeg', height= "50px")),
+             column(width=12,align = "center", h5("Solidarites International (SI)"), img(src='0_si.jpeg', height= "50px")),
              column(width=12,align = "center", h5("Soul Yemen"), img(src='0_soul.jpg', height= "50px")),
              column(width=12,align = "center", h5("Tamdeen Youth Foundation (TYF)",icon("check", "fa-2x")), img(src='0_tyf.png', height= "50px")),
              column(width=12,align = "center", h5("Vision Hope"), img(src='0_vision.png', height= "50px")),

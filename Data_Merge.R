@@ -47,6 +47,7 @@ January_2020<-read_excel("23.REACH_YEM_Dataset_Joint Market Monitoring Initiativ
 February_2020<-read_excel("24.REACH_YEM_Dataset_Joint Market Monitoring Initiative (JMMI)_Febraury2020.xlsx", sheet = 2)
 March_2020 <-read_excel("25.REACH_YEM_Dataset_Joint Market Monitoring Initiative (JMMI)_March2020.xlsx", sheet = 2)
 April_2020 <-read_excel("26.REACH_YEM_Dataset_Joint Market Monitoring Initiative (JMMI)_April2020.xlsx", sheet = 3)
+May_2020 <-read_excel("27.REACH_YEM_Dataset_Joint Market Monitoring Initiative (JMMI)_May2020.xlsx", sheet = 3)
 
 
 list_df = setNames(lapply(ls(), function(x) get(x)), ls())
@@ -62,6 +63,14 @@ colnames_pulled_all<-as_tibble(data.frame(JMMI="TEST"))
 name_object<-function(df){
   name<-deparse(substitute((df)))
   return(name)
+}
+
+round_df <- function(df, digits) {
+  nums <- vapply(df, is.numeric, FUN.VALUE = logical(1))
+  
+  df[,nums] <- round(df[,nums], digits = digits)
+  
+  (df)
 }
 
 #https://stackoverflow.com/questions/37360009/binding-values-from-function-to-global-environment-in-r
@@ -160,6 +169,7 @@ for(i in seq_along(date_list)){
   if (i ==1){
     df1<-data_all_JMMI%>%
       filter(jmmi_date==date_list[i])
+    
       
     district_all<-df1%>%
       aggregate_median("district_id")
@@ -168,25 +178,14 @@ for(i in seq_along(date_list)){
       dplyr::select("district_id","jmmi","jmmi_date")%>%
       dplyr::count(district_id, jmmi)
   
-    ####  
-   # district_wash<-df1%>%
-    #  dplyr::select("district_id","jmmi","jmmi_date","wash_gov_origin")
-    
-  #    test<-dplyr::summarise(dplyr::group_by(district_wash,district_id), dist_wash_mode = full_modes(wash_gov_origin))%>%as.data.frame()
-      
-   #   merge(district_wash, setNames(aggregate(wash_gov_origin~district_id, data=district_wash, full_modes,na.action = na.omit), c("district_id", "moda")), by="district_id")
-      
-    #  district_wash[ , moda := full_modes(wash_gov_origin),by = district_id]
-      
-      ######
-    governorate_all<-df1%>%
+    governorate_all<-district_all%>%
       aggregate_median("governorate_id")
-    
+  
     governorate_obs<-df1%>%
       dplyr::select("governorate_id","jmmi","jmmi_date")%>%
       dplyr::count(governorate_id, jmmi)
     
-    national_all<-df1%>%
+    national_all<-governorate_all%>%
       aggregate_median("country_id")
     
     national_obs<-df1%>%
@@ -201,32 +200,34 @@ for(i in seq_along(date_list)){
     df0<-data_all_JMMI%>%
       filter(jmmi_date==date_list[i-1])
     
-    district_all<-df1%>%
-      aggregate_median("district_id")%>%
-      bind_rows(district_all)
+    df0_pull<-unique(df0$district_id)
+    df_dist<-subset(df1, district_id %in% df0_pull)
+    
+    district_all_alone<-df_dist%>%
+      aggregate_median("district_id")
+    
+    district_all<-bind_rows(district_all_alone,district_all)
     
     district_obs<-df1%>%
       dplyr::select("district_id","jmmi","jmmi_date")%>%
       dplyr::count(district_id,jmmi)%>%
       bind_rows(district_obs)
     
-    governorate_all<-df1%>%
-      aggregate_median("governorate_id")%>%
-      bind_rows(governorate_all)
+    governorate_all_alone<-district_all_alone%>%
+      aggregate_median("governorate_id")
+    
+    governorate_all<-bind_rows(governorate_all_alone,governorate_all)
     
     governorate_obs<-df1%>%
       dplyr::select("governorate_id","jmmi","jmmi_date")%>%
       dplyr::count(governorate_id,jmmi)%>%
       bind_rows(governorate_obs)
     
-    df0_pull<-unique(df0$district_id)
-    df_dist<-subset(df1, district_id %in% df0_pull)
-    
-    national_all<-df_dist%>%
+    national_all<-governorate_all_alone%>%
       aggregate_median("country_id")%>%
       bind_rows(national_all)
     
-    national_obs<-df_dist%>%
+    national_obs<-df1%>%
       dplyr::select("country_id","jmmi","jmmi_date")%>%
       dplyr::count(country_id, jmmi)%>%
       bind_rows(national_obs)
@@ -240,7 +241,6 @@ for(i in seq_along(date_list)){
 district_final<-dplyr::full_join(district_all,district_obs, by = c("district_id", "jmmi"))
 governorate_final<-dplyr::full_join(governorate_all,governorate_obs, by = c("governorate_id", "jmmi"))
 national_final<-dplyr::full_join(national_all,national_obs, by = c("country_id", "jmmi"))
-
 
 #reorder the variables to fit with the google sheets templates
 #http://www.sthda.com/english/wiki/reordering-data-frame-columns-in-r
