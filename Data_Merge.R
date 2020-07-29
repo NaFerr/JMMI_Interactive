@@ -48,7 +48,7 @@ February_2020<-read_excel("24.REACH_YEM_Dataset_Joint Market Monitoring Initiati
 March_2020 <-read_excel("25.REACH_YEM_Dataset_Joint Market Monitoring Initiative (JMMI)_March2020.xlsx", sheet = 2)
 April_2020 <-read_excel("26.REACH_YEM_Dataset_Joint Market Monitoring Initiative (JMMI)_April2020.xlsx", sheet = 3)
 May_2020 <-read_excel("27.REACH_YEM_Dataset_Joint Market Monitoring Initiative (JMMI)_May2020.xlsx", sheet = 3)
-
+June_2020 <-read_excel("28.REACH_YEM_Dataset_Joint Market Monitoring Initiative (JMMI)_June2020.xlsx", sheet = 3)
 
 list_df = setNames(lapply(ls(), function(x) get(x)), ls())
 list_df_names <- names(list_df)
@@ -165,30 +165,100 @@ date_list<-sort(unique(data_all_JMMI$jmmi_date))
 #add a country ID to sort the national by (because aggregate_median needs a key column code)
 data_all_JMMI$country_id<-"YE"
 
+
 for(i in seq_along(date_list)){
   if (i ==1){
     df1<-data_all_JMMI%>%
       filter(jmmi_date==date_list[i])
     
-      
     district_all<-df1%>%
       aggregate_median("district_id")
     
     district_obs<-df1%>%
       dplyr::select("district_id","jmmi","jmmi_date")%>%
       dplyr::count(district_id, jmmi)
-  
-    governorate_all<-district_all%>%
+    
+    governorate_all<-df1%>%
       aggregate_median("governorate_id")
-  
+    
     governorate_obs<-df1%>%
       dplyr::select("governorate_id","jmmi","jmmi_date")%>%
       dplyr::count(governorate_id, jmmi)
     
-    national_all<-governorate_all%>%
+    national_all<-df1%>%
       aggregate_median("country_id")
     
     national_obs<-df1%>%
+      dplyr::select("country_id","jmmi","jmmi_date")%>%
+      dplyr::count(country_id, jmmi)
+    
+    
+  }else{
+    df1<-data_all_JMMI%>%
+      filter(jmmi_date==date_list[i])
+    
+    df0<-data_all_JMMI%>%
+      filter(jmmi_date==date_list[i-1])
+    
+    district_all<-df1%>%
+      aggregate_median("district_id")%>%
+      bind_rows(district_all)
+    
+    district_obs<-df1%>%
+      dplyr::select("district_id","jmmi","jmmi_date")%>%
+      dplyr::count(district_id,jmmi)%>%
+      bind_rows(district_obs)
+    
+    governorate_all<-df1%>%
+      aggregate_median("governorate_id")%>%
+      bind_rows(governorate_all)
+    
+    governorate_obs<-df1%>%
+      dplyr::select("governorate_id","jmmi","jmmi_date")%>%
+      dplyr::count(governorate_id,jmmi)%>%
+      bind_rows(governorate_obs)
+    
+    df0_pull<-unique(df0$district_id)
+    df_dist<-subset(df1, district_id %in% df0_pull)
+    
+    national_all<-df_dist%>%
+      aggregate_median("country_id")%>%
+      bind_rows(national_all)
+    
+    national_obs<-df_dist%>%
+      dplyr::select("country_id","jmmi","jmmi_date")%>%
+      dplyr::count(country_id, jmmi)%>%
+      bind_rows(national_obs)
+    
+    print(date_list[i])
+  }
+}
+
+
+for(i in seq_along(date_list)){
+  if (i ==1){
+    df1<-data_all_JMMI%>%
+      filter(jmmi_date==date_list[i])
+    
+      
+    district_all_pct_change<-df1%>%
+      aggregate_median("district_id")
+    
+    district_obs_pct_change<-df1%>%
+      dplyr::select("district_id","jmmi","jmmi_date")%>%
+      dplyr::count(district_id, jmmi)
+  
+    governorate_all_pct_change<-district_all%>%
+      aggregate_median("governorate_id")
+  
+    governorate_obs_pct_change<-df1%>%
+      dplyr::select("governorate_id","jmmi","jmmi_date")%>%
+      dplyr::count(governorate_id, jmmi)
+    
+    national_all_pct_change<-governorate_all%>%
+      aggregate_median("country_id")
+    
+    national_obs_pct_change<-df1%>%
       dplyr::select("country_id","jmmi","jmmi_date")%>%
       dplyr::count(country_id, jmmi)
     
@@ -203,34 +273,34 @@ for(i in seq_along(date_list)){
     df0_pull<-unique(df0$district_id)
     df_dist<-subset(df1, district_id %in% df0_pull)
     
-    district_all_alone<-df_dist%>%
+    district_all_alone_pct_change<-df_dist%>%
       aggregate_median("district_id")
     
-    district_all<-bind_rows(district_all_alone,district_all)
+    district_all_pct_change<-bind_rows(district_all_alone_pct_change,district_all_pct_change)
     
-    district_obs<-df1%>%
+    district_obs_pct_change<-df1%>%
       dplyr::select("district_id","jmmi","jmmi_date")%>%
       dplyr::count(district_id,jmmi)%>%
-      bind_rows(district_obs)
+      bind_rows(district_obs_pct_change)
     
-    governorate_all_alone<-district_all_alone%>%
+    governorate_all_alone_pct_change<-district_all_alone_pct_change%>%
       aggregate_median("governorate_id")
     
-    governorate_all<-bind_rows(governorate_all_alone,governorate_all)
+    governorate_all_pct_change<-bind_rows(governorate_all_alone_pct_change,governorate_all_pct_change)
     
-    governorate_obs<-df1%>%
+    governorate_obs_pct_change<-df1%>%
       dplyr::select("governorate_id","jmmi","jmmi_date")%>%
       dplyr::count(governorate_id,jmmi)%>%
-      bind_rows(governorate_obs)
+      bind_rows(governorate_obs_pct_change)
     
-    national_all<-governorate_all_alone%>%
+    national_all_pct_change<-governorate_all_alone_pct_change%>%
       aggregate_median("country_id")%>%
-      bind_rows(national_all)
+      bind_rows(national_all_pct_change)
     
-    national_obs<-df1%>%
+    national_obs_pct_change<-df1%>%
       dplyr::select("country_id","jmmi","jmmi_date")%>%
       dplyr::count(country_id, jmmi)%>%
-      bind_rows(national_obs)
+      bind_rows(national_obs_pct_change)
     
     print(date_list[i])
   }
@@ -241,6 +311,10 @@ for(i in seq_along(date_list)){
 district_final<-dplyr::full_join(district_all,district_obs, by = c("district_id", "jmmi"))
 governorate_final<-dplyr::full_join(governorate_all,governorate_obs, by = c("governorate_id", "jmmi"))
 national_final<-dplyr::full_join(national_all,national_obs, by = c("country_id", "jmmi"))
+
+district_final_pct_change<-dplyr::full_join(district_all_pct_change,district_obs_pct_change, by = c("district_id", "jmmi"))
+governorate_final_pct_change<-dplyr::full_join(governorate_all_alone_pct_change,governorate_obs_pct_change, by = c("governorate_id", "jmmi"))
+national_final_pct_change<-dplyr::full_join(national_all_pct_change,national_obs_pct_change, by = c("country_id", "jmmi"))
 
 #reorder the variables to fit with the google sheets templates
 #http://www.sthda.com/english/wiki/reordering-data-frame-columns-in-r
@@ -262,21 +336,33 @@ setwd(this_script_path)
 
 write.xlsx(final_list, file = "./data/updated_interactive.xlsx")
 
+#reorder the variables to fit with the google sheets templates percent change
+#http://www.sthda.com/english/wiki/reordering-data-frame-columns-in-r
+#http://rprogramming.net/rename-columns-in-r/
+
+district_final_pct_change<-district_final_pct_change[,c("jmmi_date","governorate_name","governorate_id","district_name","district_id","calc_price_petrol","calc_price_diesel","calc_price_bottled_water","calc_price_treated_water","calc_price_soap","calc_price_laundry","calc_price_sanitary","cost_cubic_meter","exchange_rate_result","n")]
+colnames(district_final_pct_change)<-c("date","government_name","government_ID","district_name","district_ID","petrol","diesel","bottled_water","treated_water","soap","laundry_powder","sanitary_napkins","cost_cubic_meter","exchange_rates","num_obs")
+
+governorate_final_pct_change<-governorate_final_pct_change[,c("jmmi_date","governorate_name","governorate_id","calc_price_petrol","calc_price_diesel","calc_price_bottled_water","calc_price_treated_water","calc_price_soap","calc_price_laundry","calc_price_sanitary","cost_cubic_meter","exchange_rate_result","n")]
+colnames(governorate_final_pct_change)<-c("date","government_name","government_ID","petrol","diesel","bottled_water","treated_water","soap","laundry_powder","sanitary_napkins","cost_cubic_meter","exchange_rates","num_obs")
+
+national_final_pct_change<-national_final_pct_change[,c("jmmi_date","calc_price_petrol","calc_price_diesel","calc_price_bottled_water","calc_price_treated_water","calc_price_soap","calc_price_laundry","calc_price_sanitary","cost_cubic_meter","exchange_rate_result","n")]
+colnames(national_final_pct_change)<-c("date","petrol","diesel","bottled_water","treated_water","soap","laundry_powder","sanitary_napkins","cost_cubic_meter","exchange_rates","num_obs")
+
+final_list_pct_change<-list("District"=district_final_pct_change,"Governorate" = governorate_final_pct_change, "National" = national_final_pct_change)
+
+this_script_path<-(dirname(rstudioapi::getActiveDocumentContext()$path))
+setwd(this_script_path)
+
+write.xlsx(final_list_pct_change, file = "./data/updated_interactive_pct_change.xlsx")
+
 #undo after all clear
 write.csv(district_final, file = "./data/district_interactive.csv")
 write.csv(governorate_final, file = "./data/governorate_interactive.csv")
 write.csv(national_final, file = "./data/national_interactive.csv")
 
-#set up google sheets dynamically
-#GS_dist<- gs_key('1NnQNwo3FnEyayGwUk-TUeSRxV04CkiqsDuTePpbYpWs') #Districts
-#GS_gov<-read_sheet('https://docs.google.com/spreadsheets/d/1F7HEGZEe5_6sk_xrFrwg8k9VVWkpprXSC7O3SosWbjc/edit#gid=0') #Governorates
-#GS_nat<-gs_key('1Ct9OGhvc6HkuVwDdsukVNthH31fNxxBZmtQrhlVyD7w')#National
+write.csv(district_final_pct_change, file = "./data/district_interactive_pct_change.csv")
+write.csv(governorate_final_pct_change, file = "./data/governorate_interactive_pct_change.csv")
+write.csv(national_final_pct_change, file = "./data/national_interactive_pct_change.csv")
 
-#gs_edit_cells(GS_dist, ws='Sheet1', input=colnames(district_final),byrow=T, anchor = "A1")
-#gs_edit_cells(GS_dist, ws='Sheet1', input=district_final,col_names = F,trim=T)
 
-#gs_edit_cells(GS_gov, ws='Sheet1', input=colnames(governorate_final),byrow=T, anchor = "A1")
-#gs_edit_cells(GS_gov, ws='Sheet1', input=governorate_final,anchor="A2",col_names = F,trim=T)
-
-#gs_edit_cells(GS_nat, ws='Sheet1', input=colnames(national_final),byrow=T, anchor = "A1")
-#gs_edit_cells(GS_nat, ws='Sheet1', input=national_final,col_names = F,trim=T)
